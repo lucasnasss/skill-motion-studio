@@ -1,0 +1,35 @@
+{
+  "version": "2.0",
+  "mode": "create",
+  "style": "toy-3d",
+  "title": "Toy 3D — pequenas ideias em movimento",
+  "objective": "Demonstrar a identidade visual Toy 3D com materiais suaves e movimento expressivo.",
+  "audience": "Público de redes sociais",
+  "language": "pt-BR",
+  "theme": "modern",
+  "video": {"width": 1080, "height": 1080, "fps": 30, "safeMarginPct": 0.08},
+  "captions": {"enabled": true, "burnIn": true, "position": "bottom", "style": "traditional", "fontSize": 30},
+  "timeline": {"durationSeconds": 12, "tracks": [{"id": "toy-track", "type": "three", "clips": [{"id": "toy-one", "startSeconds": 0, "durationSeconds": 6, "sceneId": "toy-intro"}, {"id": "toy-two", "startSeconds": 6, "durationSeconds": 6, "sceneId": "toy-finale"}]}]},
+  "scenes": [
+    {
+      "id": "toy-intro",
+      "durationSeconds": 6,
+      "transition": {"type": "fade", "durationSeconds": 0.5},
+      "captions": [{"id": "toy-caption-1", "startSeconds": 0.5, "endSeconds": 5.5, "text": "Toy 3D: formas simples, personalidade forte"}],
+      "elements": [
+        {"id": "toy-title", "type": "text", "x": 0.08, "y": 0.08, "width": 0.84, "height": 0.16, "text": "PEQUENAS IDEIAS,\nGRANDES MOVIMENTOS", "role": "subtitle", "fontSize": 48, "align": "center", "maxLines": 2, "enter": {"preset": "pop", "durationSeconds": 0.8, "easing": "spring"}},
+        {"id": "toy-sphere", "type": "three", "x": 0.18, "y": 0.22, "width": 0.64, "height": 0.58, "primitive": "sphere", "style": "toy-3d", "material": "toon", "color": "#FF6FAE", "accentColor": "#69A7FF", "rotationSpeed": [0.4, 0.65, 0.2], "objectScale": 1.08, "camera": {"position": [0, 0.3, 5], "orbitRadius": 0.6, "orbitSpeed": 0.4}, "lighting": {"ambient": 1.8, "key": 4.5, "fill": 3, "shadows": true}}
+      ]
+    },
+    {
+      "id": "toy-finale",
+      "durationSeconds": 6,
+      "transition": {"type": "zoom", "durationSeconds": 0.5},
+      "captions": [{"id": "toy-caption-2", "startSeconds": 0.5, "endSeconds": 5.5, "text": "Materiais suaves • câmera viva • sombra real"}],
+      "elements": [
+        {"id": "toy-torus", "type": "three", "x": 0.12, "y": 0.13, "width": 0.76, "height": 0.65, "primitive": "torus", "style": "toy-3d", "material": "toon", "color": "#54D6D0", "accentColor": "#FFCB69", "rotationSpeed": [0.55, 0.9, 0.35], "objectScale": 1.05, "camera": {"position": [0, 0.5, 5.2], "orbitRadius": 0.8, "orbitSpeed": -0.38}, "lighting": {"ambient": 1.7, "key": 4.8, "fill": 3.2, "shadows": true}},
+        {"id": "toy-label", "type": "text", "x": 0.16, "y": 0.77, "width": 0.68, "height": 0.1, "text": "TOY 3D ORIGINAL", "role": "eyebrow", "fontSize": 28, "align": "center", "enter": {"preset": "fade", "delaySeconds": 0.5, "durationSeconds": 0.5}}
+      ]
+    }
+  ]
+}

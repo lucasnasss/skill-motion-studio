@@ -1,0 +1,227 @@
+{
+  "version": "1.0",
+  "title": "Ideias em movimento",
+  "prompt": "Vídeo vertical de 15 segundos com texto, formas e transições.",
+  "objective": "Demonstrar ritmo, hierarquia e transições em um vídeo social curto.",
+  "audience": "Usuários de redes sociais em dispositivos móveis",
+  "language": "pt-BR",
+  "theme": "modern",
+  "video": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "safeMarginPct": 0.08
+  },
+  "captions": {
+    "enabled": true,
+    "burnIn": false,
+    "position": "bottom"
+  },
+  "assets": {"attributions": []},
+  "scenes": [
+    {
+      "id": "hook",
+      "title": "Hook",
+      "durationSeconds": 3.5,
+      "transition": {"type": "zoom", "durationSeconds": 0.6},
+      "narration": "Uma ideia pode ganhar movimento.",
+      "elements": [
+        {
+          "id": "orb-one",
+          "type": "shape",
+          "kind": "circle",
+          "x": 0.56,
+          "y": 0.08,
+          "width": 0.34,
+          "height": 0.19,
+          "fill": "#8B7CFF",
+          "opacity": 0.42,
+          "enter": {"preset": "pop", "durationSeconds": 0.8, "easing": "spring"}
+        },
+        {
+          "id": "orb-two",
+          "type": "shape",
+          "kind": "circle",
+          "x": 0.02,
+          "y": 0.67,
+          "width": 0.3,
+          "height": 0.17,
+          "fill": "#39D2C0",
+          "opacity": 0.34,
+          "enter": {"preset": "zoom", "delaySeconds": 0.18, "durationSeconds": 0.8}
+        },
+        {
+          "id": "eyebrow",
+          "type": "text",
+          "x": 0.1,
+          "y": 0.21,
+          "width": 0.8,
+          "height": 0.08,
+          "text": "MOTION STUDIO",
+          "role": "eyebrow",
+          "align": "center",
+          "verticalAlign": "center",
+          "enter": {"preset": "fade", "durationSeconds": 0.5}
+        },
+        {
+          "id": "headline",
+          "type": "text",
+          "x": 0.1,
+          "y": 0.31,
+          "width": 0.8,
+          "height": 0.31,
+          "text": "Ideias\nem movimento",
+          "role": "title",
+          "fontSize": 100,
+          "align": "center",
+          "verticalAlign": "center",
+          "maxLines": 3,
+          "enter": {"preset": "slide-up", "delaySeconds": 0.18, "durationSeconds": 0.7, "easing": "ease-out"},
+          "exit": {"preset": "zoom", "durationSeconds": 0.4}
+        }
+      ]
+    },
+    {
+      "id": "sequence",
+      "title": "Sequência",
+      "durationSeconds": 4,
+      "transition": {"type": "slide-left", "durationSeconds": 0.55},
+      "narration": "Texto, formas e ritmo trabalham juntos.",
+      "elements": [
+        {
+          "id": "sequence-title",
+          "type": "text",
+          "x": 0.1,
+          "y": 0.13,
+          "width": 0.8,
+          "height": 0.16,
+          "text": "Clareza em\ntrês movimentos",
+          "role": "subtitle",
+          "fontSize": 68,
+          "align": "left",
+          "verticalAlign": "center",
+          "enter": {"preset": "slide-right", "durationSeconds": 0.6}
+        },
+        {
+          "id": "three-steps",
+          "type": "process",
+          "x": 0.1,
+          "y": 0.34,
+          "width": 0.8,
+          "height": 0.47,
+          "orientation": "vertical",
+          "steps": [
+            {"label": "Organize", "detail": "uma mensagem por cena", "color": "#8B7CFF"},
+            {"label": "Destaque", "detail": "o que precisa ser lembrado", "color": "#39D2C0"},
+            {"label": "Conecte", "detail": "movimento com significado", "color": "#FF6FAE"}
+          ],
+          "enter": {"preset": "slide-up", "delaySeconds": 0.15, "durationSeconds": 1, "easing": "ease-out"}
+        }
+      ]
+    },
+    {
+      "id": "impact",
+      "title": "Impacto",
+      "durationSeconds": 4,
+      "transition": {"type": "slide-up", "durationSeconds": 0.55},
+      "narration": "Cada quadro conduz o olhar.",
+      "elements": [
+        {
+          "id": "impact-ring",
+          "type": "shape",
+          "kind": "ring",
+          "x": 0.17,
+          "y": 0.16,
+          "width": 0.66,
+          "height": 0.37,
+          "stroke": "#39D2C0",
+          "strokeWidth": 14,
+          "enter": {"preset": "draw", "durationSeconds": 1.2, "easing": "ease-in-out"}
+        },
+        {
+          "id": "impact-number",
+          "type": "text",
+          "x": 0.22,
+          "y": 0.25,
+          "width": 0.56,
+          "height": 0.2,
+          "text": "01",
+          "role": "number",
+          "fontSize": 150,
+          "color": "#F8F7FF",
+          "align": "center",
+          "verticalAlign": "center",
+          "enter": {"preset": "pop", "delaySeconds": 0.25, "durationSeconds": 0.65, "easing": "spring"}
+        },
+        {
+          "id": "impact-copy",
+          "type": "text",
+          "x": 0.1,
+          "y": 0.58,
+          "width": 0.8,
+          "height": 0.2,
+          "text": "Um foco.\nUma leitura imediata.",
+          "role": "subtitle",
+          "fontSize": 62,
+          "align": "center",
+          "verticalAlign": "center",
+          "enter": {"preset": "fade", "delaySeconds": 0.5, "durationSeconds": 0.7}
+        }
+      ]
+    },
+    {
+      "id": "finish",
+      "title": "Fecho",
+      "durationSeconds": 3.5,
+      "transition": {"type": "fade", "durationSeconds": 0.55},
+      "narration": "Descreva. Revise. Renderize.",
+      "elements": [
+        {
+          "id": "finish-panel",
+          "type": "shape",
+          "kind": "rounded",
+          "x": 0.08,
+          "y": 0.26,
+          "width": 0.84,
+          "height": 0.44,
+          "fill": "#1B1936",
+          "stroke": "#8B7CFF",
+          "strokeWidth": 5,
+          "borderRadius": 44,
+          "shadow": "0 30px 90px rgba(0,0,0,0.35)",
+          "enter": {"preset": "zoom", "durationSeconds": 0.65, "easing": "spring"}
+        },
+        {
+          "id": "finish-title",
+          "type": "text",
+          "x": 0.14,
+          "y": 0.34,
+          "width": 0.72,
+          "height": 0.18,
+          "text": "Descreva.\nRevise. Renderize.",
+          "role": "subtitle",
+          "fontSize": 66,
+          "align": "center",
+          "verticalAlign": "center",
+          "enter": {"preset": "slide-up", "delaySeconds": 0.18, "durationSeconds": 0.65}
+        },
+        {
+          "id": "finish-tag",
+          "type": "text",
+          "x": 0.22,
+          "y": 0.57,
+          "width": 0.56,
+          "height": 0.08,
+          "text": "MP4 • 1080 × 1920 • 30 FPS",
+          "role": "label",
+          "fontSize": 28,
+          "color": "#39D2C0",
+          "align": "center",
+          "verticalAlign": "center",
+          "enter": {"preset": "fade", "delaySeconds": 0.55, "durationSeconds": 0.5}
+        }
+      ]
+    }
+  ]
+}
+

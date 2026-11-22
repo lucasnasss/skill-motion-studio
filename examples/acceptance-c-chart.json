@@ -1,0 +1,174 @@
+{
+  "version": "1.0",
+  "title": "Crescimento trimestral — dados demonstrativos",
+  "prompt": "Animação de um gráfico de dados com eixos, valores, legendas e crescimento progressivo.",
+  "objective": "Demonstrar a construção progressiva e legível de uma visualização de dados.",
+  "audience": "Público de uma apresentação de negócios",
+  "language": "pt-BR",
+  "theme": "infographic",
+  "video": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "safeMarginPct": 0.065
+  },
+  "captions": {
+    "enabled": true,
+    "burnIn": false,
+    "position": "bottom"
+  },
+  "assets": {"attributions": []},
+  "scenes": [
+    {
+      "id": "chart-intro",
+      "title": "Contexto",
+      "durationSeconds": 4,
+      "transition": {"type": "fade", "durationSeconds": 0.55},
+      "narration": "Este conjunto demonstrativo cresce a cada trimestre.",
+      "elements": [
+        {
+          "id": "intro-label",
+          "type": "text",
+          "x": 0.08,
+          "y": 0.2,
+          "width": 0.5,
+          "height": 0.08,
+          "text": "DADOS DEMONSTRATIVOS",
+          "role": "eyebrow",
+          "align": "left",
+          "verticalAlign": "center",
+          "enter": {"preset": "fade", "durationSeconds": 0.45}
+        },
+        {
+          "id": "intro-title",
+          "type": "text",
+          "x": 0.08,
+          "y": 0.32,
+          "width": 0.7,
+          "height": 0.3,
+          "text": "Crescimento\ntrimestre a trimestre",
+          "role": "title",
+          "fontSize": 92,
+          "align": "left",
+          "verticalAlign": "center",
+          "enter": {"preset": "slide-up", "delaySeconds": 0.15, "durationSeconds": 0.75, "easing": "ease-out"}
+        },
+        {
+          "id": "intro-arrow",
+          "type": "shape",
+          "kind": "arrow",
+          "x": 0.58,
+          "y": 0.65,
+          "width": 0.3,
+          "height": 0.07,
+          "stroke": "#12A594",
+          "strokeWidth": 10,
+          "rotation": -24,
+          "enter": {"preset": "draw", "delaySeconds": 0.35, "durationSeconds": 0.9}
+        }
+      ]
+    },
+    {
+      "id": "bar-chart",
+      "title": "Gráfico de barras",
+      "durationSeconds": 9,
+      "transition": {"type": "slide-left", "durationSeconds": 0.6},
+      "narration": "Os eixos identificam trimestre e valor. Rótulos mostram os números e as barras crescem a partir da linha de base.",
+      "elements": [
+        {
+          "id": "series-legend",
+          "type": "text",
+          "x": 0.69,
+          "y": 0.075,
+          "width": 0.23,
+          "height": 0.07,
+          "text": "■ Receita trimestral",
+          "role": "label",
+          "fontSize": 25,
+          "color": "#2457D6",
+          "align": "right",
+          "verticalAlign": "center",
+          "enter": {"preset": "fade", "delaySeconds": 0.4, "durationSeconds": 0.5}
+        },
+        {
+          "id": "quarterly-bars",
+          "type": "chart",
+          "chartType": "bar",
+          "x": 0.065,
+          "y": 0.13,
+          "width": 0.87,
+          "height": 0.74,
+          "title": "Receita por trimestre — exemplo ilustrativo",
+          "xLabel": "Trimestre",
+          "yLabel": "Receita (R$ mil)",
+          "min": 0,
+          "max": 80,
+          "showValues": true,
+          "showLegend": true,
+          "grid": true,
+          "data": [
+            {"label": "T1", "value": 24, "color": "#69A7FF"},
+            {"label": "T2", "value": 38, "color": "#54D6D0"},
+            {"label": "T3", "value": 53, "color": "#8B7CFF"},
+            {"label": "T4", "value": 71, "color": "#F05A47"}
+          ],
+          "enter": {"preset": "fade", "durationSeconds": 0.45}
+        }
+      ]
+    },
+    {
+      "id": "chart-conclusion",
+      "title": "Leitura",
+      "durationSeconds": 5,
+      "transition": {"type": "zoom", "durationSeconds": 0.55},
+      "narration": "A mensagem fica clara: neste exemplo, o valor sobe de vinte e quatro para setenta e um mil reais.",
+      "elements": [
+        {
+          "id": "result-number",
+          "type": "text",
+          "x": 0.08,
+          "y": 0.2,
+          "width": 0.84,
+          "height": 0.2,
+          "text": "+196%",
+          "role": "number",
+          "fontSize": 150,
+          "color": "#12A594",
+          "align": "center",
+          "verticalAlign": "center",
+          "enter": {"preset": "pop", "durationSeconds": 0.8, "easing": "spring"}
+        },
+        {
+          "id": "result-copy",
+          "type": "text",
+          "x": 0.16,
+          "y": 0.44,
+          "width": 0.68,
+          "height": 0.19,
+          "text": "de 24 para 71\nR$ mil no exemplo",
+          "role": "subtitle",
+          "fontSize": 58,
+          "align": "center",
+          "verticalAlign": "center",
+          "enter": {"preset": "slide-up", "delaySeconds": 0.25, "durationSeconds": 0.65}
+        },
+        {
+          "id": "result-note",
+          "type": "text",
+          "x": 0.22,
+          "y": 0.72,
+          "width": 0.56,
+          "height": 0.08,
+          "text": "Valores fictícios usados apenas para demonstração",
+          "role": "caption",
+          "fontSize": 27,
+          "color": "#65728A",
+          "align": "center",
+          "verticalAlign": "center",
+          "enter": {"preset": "fade", "delaySeconds": 0.55, "durationSeconds": 0.5}
+        }
+      ]
+    }
+  ]
+}
+

@@ -1,0 +1,8 @@
+node_modules/
+output/
+.render-temp/
+public/imports/
+examples/pro2-c-edit-proxy.json
+dist/
+.DS_Store
+*.log

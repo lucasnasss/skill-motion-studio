@@ -1,0 +1,10 @@
+{
+  "version": "1.0",
+  "concurrency": 2,
+  "retries": 1,
+  "jobs": [
+    {"id": "create-vertical", "action": "validate", "project": "pro2-a-create-vertical-tts.json"},
+    {"id": "modern-3d", "action": "validate", "project": "pro2-b-3d.json"},
+    {"id": "toy-3d", "action": "validate", "project": "pro2-d-toy-3d.json"}
+  ]
+}

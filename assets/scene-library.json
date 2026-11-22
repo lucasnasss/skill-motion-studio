@@ -1,0 +1,18 @@
+{
+  "version": "1.0",
+  "templates": [
+    {"id":"question-opener","name":"Abertura com pergunta","layout":"question","defaultDuration":4},
+    {"id":"problem-solution","name":"Problema e solução","layout":"split","defaultDuration":6},
+    {"id":"before-after","name":"Antes e depois","layout":"split","defaultDuration":6},
+    {"id":"comparison","name":"Comparação","layout":"split","defaultDuration":6},
+    {"id":"steps","name":"Explicação em etapas","layout":"steps","defaultDuration":8},
+    {"id":"visual-list","name":"Lista visual","layout":"steps","defaultDuration":7},
+    {"id":"number-highlight","name":"Destaque numérico","layout":"number","defaultDuration":4},
+    {"id":"product-animation","name":"Animação de produto","layout":"product","defaultDuration":6},
+    {"id":"timeline","name":"Linha do tempo","layout":"steps","defaultDuration":8},
+    {"id":"science-demo","name":"Demonstração científica","layout":"science","defaultDuration":8},
+    {"id":"closing","name":"Encerramento","layout":"question","defaultDuration":4},
+    {"id":"call-to-action","name":"Chamada para ação","layout":"number","defaultDuration":4}
+  ],
+  "parameters": ["title","subtitle","items","value","color","accentColor","durationSeconds","animation"]
+}

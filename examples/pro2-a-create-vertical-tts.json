@@ -1,0 +1,528 @@
+{
+  "version": "2.0",
+  "mode": "create",
+  "style": "mixed",
+  "title": "Como a inteligência artificial aprende",
+  "prompt": "Crie um Reel vertical de 30 segundos explicando como a inteligência artificial aprende, com narração e legendas.",
+  "objective": "Explicar em linguagem visual que modelos aprendem padrões a partir de exemplos e não compreendem como pessoas.",
+  "audience": "Público geral em redes sociais",
+  "language": "pt-BR",
+  "theme": "modern",
+  "video": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "safeMarginPct": 0.08
+  },
+  "captions": {
+    "enabled": true,
+    "burnIn": true,
+    "position": "bottom",
+    "style": "traditional",
+    "highlightColor": "#FFCB69",
+    "fontSize": 36,
+    "maxWordsPerLine": 7
+  },
+  "assets": {
+    "attributions": []
+  },
+  "timeline": {
+    "durationSeconds": 30,
+    "tracks": [
+      {
+        "id": "visual-story",
+        "type": "overlay",
+        "clips": [
+          {
+            "id": "hook-clip",
+            "startSeconds": 0,
+            "durationSeconds": 6,
+            "sceneId": "hook"
+          },
+          {
+            "id": "examples-clip",
+            "startSeconds": 6,
+            "durationSeconds": 6,
+            "sceneId": "examples"
+          },
+          {
+            "id": "patterns-clip",
+            "startSeconds": 12,
+            "durationSeconds": 6,
+            "sceneId": "patterns"
+          },
+          {
+            "id": "prediction-clip",
+            "startSeconds": 18,
+            "durationSeconds": 6,
+            "sceneId": "prediction"
+          },
+          {
+            "id": "limits-clip",
+            "startSeconds": 24,
+            "durationSeconds": 6,
+            "sceneId": "limits"
+          }
+        ]
+      },
+      {
+        "id": "narration",
+        "type": "audio",
+        "clips": [
+          {
+            "id": "narration-001",
+            "startSeconds": 0,
+            "durationSeconds": 6,
+            "sceneId": "hook",
+            "volume": 1
+          },
+          {
+            "id": "narration-002",
+            "startSeconds": 6,
+            "durationSeconds": 6,
+            "sceneId": "examples",
+            "volume": 1
+          },
+          {
+            "id": "narration-003",
+            "startSeconds": 12,
+            "durationSeconds": 6,
+            "sceneId": "patterns",
+            "volume": 1
+          },
+          {
+            "id": "narration-004",
+            "startSeconds": 18,
+            "durationSeconds": 6,
+            "sceneId": "prediction",
+            "volume": 1
+          },
+          {
+            "id": "narration-005",
+            "startSeconds": 24,
+            "durationSeconds": 6,
+            "sceneId": "limits",
+            "volume": 1
+          }
+        ]
+      }
+    ]
+  },
+  "scenes": [
+    {
+      "id": "hook",
+      "durationSeconds": 6,
+      "transition": {
+        "type": "fade",
+        "durationSeconds": 0.5
+      },
+      "narration": "Inteligência artificial não aprende como uma pessoa.",
+      "captions": [
+        {
+          "id": "hook-caption",
+          "startSeconds": 0.4,
+          "endSeconds": 5.5,
+          "text": "IA não aprende como uma pessoa"
+        }
+      ],
+      "elements": [
+        {
+          "id": "hook-label",
+          "type": "text",
+          "x": 0.1,
+          "y": 0.1,
+          "width": 0.8,
+          "height": 0.07,
+          "text": "EM 30 SEGUNDOS",
+          "role": "eyebrow",
+          "align": "center",
+          "enter": {
+            "preset": "fade",
+            "durationSeconds": 0.4
+          }
+        },
+        {
+          "id": "hook-title",
+          "type": "text",
+          "x": 0.1,
+          "y": 0.2,
+          "width": 0.8,
+          "height": 0.23,
+          "text": "COMO A IA\nAPRENDE?",
+          "role": "title",
+          "fontSize": 88,
+          "align": "center",
+          "maxLines": 2,
+          "enter": {
+            "preset": "slide-up",
+            "durationSeconds": 0.7
+          }
+        },
+        {
+          "id": "hook-orb",
+          "type": "three",
+          "x": 0.15,
+          "y": 0.42,
+          "width": 0.7,
+          "height": 0.38,
+          "primitive": "sphere",
+          "style": "3d-minimal",
+          "material": "physical",
+          "color": "#6D5EF9",
+          "accentColor": "#54D6D0",
+          "rotationSpeed": [
+            0.2,
+            0.5,
+            0.1
+          ],
+          "camera": {
+            "position": [
+              0,
+              0.3,
+              5
+            ],
+            "orbitRadius": 0.6,
+            "orbitSpeed": 0.3
+          },
+          "lighting": {
+            "ambient": 1.2,
+            "key": 5,
+            "fill": 2.5,
+            "shadows": true
+          }
+        }
+      ],
+      "audio": {
+        "src": "audio/pro2-a-hook.wav",
+        "volume": 1
+      }
+    },
+    {
+      "id": "examples",
+      "durationSeconds": 6,
+      "transition": {
+        "type": "slide-left",
+        "durationSeconds": 0.45
+      },
+      "narration": "Ela recebe muitos exemplos, como textos, imagens ou sons.",
+      "captions": [
+        {
+          "id": "examples-caption",
+          "startSeconds": 0.4,
+          "endSeconds": 5.5,
+          "text": "Muitos exemplos: textos, imagens e sons"
+        }
+      ],
+      "elements": [
+        {
+          "id": "examples-title",
+          "type": "text",
+          "x": 0.1,
+          "y": 0.12,
+          "width": 0.8,
+          "height": 0.12,
+          "text": "1. EXEMPLOS",
+          "role": "subtitle",
+          "fontSize": 58,
+          "align": "center",
+          "enter": {
+            "preset": "slide-up",
+            "durationSeconds": 0.6
+          }
+        },
+        {
+          "id": "examples-process",
+          "type": "process",
+          "x": 0.12,
+          "y": 0.3,
+          "width": 0.76,
+          "height": 0.42,
+          "orientation": "vertical",
+          "steps": [
+            {
+              "label": "Texto",
+              "detail": "palavras e contexto",
+              "color": "#69A7FF"
+            },
+            {
+              "label": "Imagem",
+              "detail": "formas e relações",
+              "color": "#54D6D0"
+            },
+            {
+              "label": "Som",
+              "detail": "ritmo e frequência",
+              "color": "#FFCB69"
+            }
+          ],
+          "enter": {
+            "preset": "slide-up",
+            "durationSeconds": 1
+          }
+        }
+      ],
+      "audio": {
+        "src": "audio/pro2-a-examples.wav",
+        "volume": 1
+      }
+    },
+    {
+      "id": "patterns",
+      "durationSeconds": 6,
+      "transition": {
+        "type": "slide-up",
+        "durationSeconds": 0.45
+      },
+      "narration": "Durante o treinamento, o modelo ajusta números para reconhecer padrões.",
+      "captions": [
+        {
+          "id": "patterns-caption",
+          "startSeconds": 0.4,
+          "endSeconds": 5.5,
+          "text": "Treinamento = ajustar números para encontrar padrões"
+        }
+      ],
+      "elements": [
+        {
+          "id": "patterns-title",
+          "type": "text",
+          "x": 0.1,
+          "y": 0.1,
+          "width": 0.8,
+          "height": 0.15,
+          "text": "2. ENCONTRAR PADRÕES",
+          "role": "subtitle",
+          "fontSize": 52,
+          "align": "center",
+          "enter": {
+            "preset": "fade",
+            "durationSeconds": 0.5
+          }
+        },
+        {
+          "id": "patterns-chart",
+          "type": "chart",
+          "chartType": "line",
+          "x": 0.08,
+          "y": 0.3,
+          "width": 0.84,
+          "height": 0.43,
+          "title": "Erro durante o treinamento",
+          "xLabel": "Etapas",
+          "yLabel": "Erro",
+          "min": 0,
+          "max": 100,
+          "showValues": true,
+          "grid": true,
+          "data": [
+            {
+              "label": "1",
+              "value": 92,
+              "color": "#F05A47"
+            },
+            {
+              "label": "2",
+              "value": 68,
+              "color": "#FFCB69"
+            },
+            {
+              "label": "3",
+              "value": 43,
+              "color": "#54D6D0"
+            },
+            {
+              "label": "4",
+              "value": 25,
+              "color": "#69A7FF"
+            }
+          ],
+          "enter": {
+            "preset": "fade",
+            "durationSeconds": 0.5
+          }
+        }
+      ],
+      "audio": {
+        "src": "audio/pro2-a-patterns.wav",
+        "volume": 1
+      }
+    },
+    {
+      "id": "prediction",
+      "durationSeconds": 6,
+      "transition": {
+        "type": "zoom",
+        "durationSeconds": 0.45
+      },
+      "narration": "Depois, usa esses padrões para estimar a resposta mais provável.",
+      "captions": [
+        {
+          "id": "prediction-caption",
+          "startSeconds": 0.4,
+          "endSeconds": 5.5,
+          "text": "Padrões → previsão mais provável"
+        }
+      ],
+      "elements": [
+        {
+          "id": "prediction-title",
+          "type": "text",
+          "x": 0.1,
+          "y": 0.12,
+          "width": 0.8,
+          "height": 0.15,
+          "text": "3. PREVER",
+          "role": "subtitle",
+          "fontSize": 58,
+          "align": "center",
+          "enter": {
+            "preset": "pop",
+            "durationSeconds": 0.6
+          }
+        },
+        {
+          "id": "prediction-diagram",
+          "type": "diagram",
+          "x": 0.1,
+          "y": 0.32,
+          "width": 0.8,
+          "height": 0.38,
+          "nodes": [
+            {
+              "id": "input",
+              "label": "Nova pergunta",
+              "x": 0.05,
+              "y": 0.36,
+              "color": "#69A7FF"
+            },
+            {
+              "id": "model",
+              "label": "Padrões aprendidos",
+              "x": 0.37,
+              "y": 0.36,
+              "color": "#6D5EF9"
+            },
+            {
+              "id": "answer",
+              "label": "Resposta provável",
+              "x": 0.7,
+              "y": 0.36,
+              "color": "#54D6D0"
+            }
+          ],
+          "edges": [
+            {
+              "from": "input",
+              "to": "model",
+              "directed": true
+            },
+            {
+              "from": "model",
+              "to": "answer",
+              "directed": true
+            }
+          ],
+          "enter": {
+            "preset": "draw",
+            "durationSeconds": 1
+          }
+        }
+      ],
+      "audio": {
+        "src": "audio/pro2-a-prediction.wav",
+        "volume": 1
+      }
+    },
+    {
+      "id": "limits",
+      "durationSeconds": 6,
+      "transition": {
+        "type": "fade",
+        "durationSeconds": 0.45
+      },
+      "narration": "Por isso, uma resposta convincente ainda pode estar errada.",
+      "captions": [
+        {
+          "id": "limits-caption",
+          "startSeconds": 0.4,
+          "endSeconds": 5.5,
+          "text": "Convincente não significa correto"
+        }
+      ],
+      "elements": [
+        {
+          "id": "limits-ring",
+          "type": "shape",
+          "kind": "ring",
+          "x": 0.29,
+          "y": 0.18,
+          "width": 0.42,
+          "height": 0.24,
+          "stroke": "#FFCB69",
+          "strokeWidth": 14,
+          "enter": {
+            "preset": "draw",
+            "durationSeconds": 0.9
+          }
+        },
+        {
+          "id": "limits-mark",
+          "type": "text",
+          "x": 0.36,
+          "y": 0.22,
+          "width": 0.28,
+          "height": 0.14,
+          "text": "!",
+          "role": "number",
+          "fontSize": 110,
+          "color": "#FFCB69",
+          "align": "center",
+          "enter": {
+            "preset": "pop",
+            "delaySeconds": 0.4,
+            "durationSeconds": 0.6
+          }
+        },
+        {
+          "id": "limits-title",
+          "type": "text",
+          "x": 0.1,
+          "y": 0.46,
+          "width": 0.8,
+          "height": 0.22,
+          "text": "PARECE CERTO\n≠\nESTÁ CERTO",
+          "role": "title",
+          "fontSize": 64,
+          "align": "center",
+          "maxLines": 3,
+          "enter": {
+            "preset": "slide-up",
+            "durationSeconds": 0.8
+          }
+        },
+        {
+          "id": "limits-note",
+          "type": "text",
+          "x": 0.14,
+          "y": 0.72,
+          "width": 0.72,
+          "height": 0.07,
+          "text": "Verifique fontes e fatos importantes",
+          "role": "caption",
+          "fontSize": 30,
+          "color": "#A8C1D8",
+          "align": "center",
+          "enter": {
+            "preset": "fade",
+            "delaySeconds": 0.7,
+            "durationSeconds": 0.5
+          }
+        }
+      ],
+      "audio": {
+        "src": "audio/pro2-a-limits.wav",
+        "volume": 1
+      }
+    }
+  ]
+}

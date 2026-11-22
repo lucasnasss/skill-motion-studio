@@ -1,0 +1,66 @@
+{
+  "version": "2.0",
+  "mode": "create",
+  "style": "3d-modern",
+  "title": "Movimento 3D integrado",
+  "prompt": "Crie uma demonstração 3D de 15 segundos com materiais, iluminação e câmera em movimento.",
+  "objective": "Comprovar renderização 3D determinística integrada ao Remotion.",
+  "audience": "Público técnico e criativo",
+  "language": "pt-BR",
+  "theme": "modern",
+  "video": {"width": 1920, "height": 1080, "fps": 30, "safeMarginPct": 0.07},
+  "captions": {"enabled": true, "burnIn": true, "position": "bottom", "style": "highlight", "highlightColor": "#FFCB69", "fontSize": 34},
+  "assets": {"attributions": []},
+  "timeline": {
+    "durationSeconds": 15,
+    "tracks": [{
+      "id": "three-main",
+      "type": "three",
+      "clips": [
+        {"id": "orb-clip", "startSeconds": 0, "durationSeconds": 5, "sceneId": "orb"},
+        {"id": "torus-clip", "startSeconds": 5, "durationSeconds": 5, "sceneId": "torus"},
+        {"id": "cube-clip", "startSeconds": 10, "durationSeconds": 5, "sceneId": "cube"}
+      ]
+    }]
+  },
+  "scenes": [
+    {
+      "id": "orb",
+      "title": "Forma e profundidade",
+      "durationSeconds": 5,
+      "transition": {"type": "fade", "durationSeconds": 0.5},
+      "narration": "Geometria tridimensional com luz, sombra e profundidade.",
+      "captions": [{"id": "orb-caption", "startSeconds": 0.5, "endSeconds": 4.5, "text": "Geometria tridimensional • luz • sombra • profundidade"}],
+      "elements": [
+        {"id": "orb-kicker", "type": "text", "x": 0.08, "y": 0.16, "width": 0.38, "height": 0.08, "text": "3D MODERN", "role": "eyebrow", "enter": {"preset": "fade", "durationSeconds": 0.4}},
+        {"id": "orb-title", "type": "text", "x": 0.08, "y": 0.27, "width": 0.42, "height": 0.3, "text": "Forma, luz\ne profundidade", "role": "title", "fontSize": 78, "maxLines": 3, "enter": {"preset": "slide-up", "durationSeconds": 0.7}},
+        {"id": "orb-3d", "type": "three", "x": 0.48, "y": 0.09, "width": 0.46, "height": 0.76, "primitive": "sphere", "style": "3d-minimal", "material": "physical", "color": "#6D5EF9", "accentColor": "#54D6D0", "rotationSpeed": [0.18, 0.42, 0.1], "camera": {"position": [0, 0.4, 5], "target": [0, 0, 0], "orbitRadius": 0.7, "orbitSpeed": 0.32}, "lighting": {"ambient": 1.1, "key": 5, "fill": 2.3, "shadows": true}, "enter": {"preset": "zoom", "durationSeconds": 0.8}}
+      ]
+    },
+    {
+      "id": "torus",
+      "title": "Câmera e material",
+      "durationSeconds": 5,
+      "transition": {"type": "slide-left", "durationSeconds": 0.5},
+      "narration": "A câmera orbita enquanto o material responde à iluminação.",
+      "captions": [{"id": "torus-caption", "startSeconds": 0.4, "endSeconds": 4.5, "text": "Câmera orbital e material físico"}],
+      "elements": [
+        {"id": "torus-3d", "type": "three", "x": 0.07, "y": 0.09, "width": 0.56, "height": 0.78, "primitive": "torus", "style": "technical", "material": "physical", "color": "#12A594", "accentColor": "#FFCB69", "rotationSpeed": [0.35, 0.8, 0.2], "camera": {"position": [0, 0.3, 5.4], "target": [0, 0, 0], "orbitRadius": 1.1, "orbitSpeed": 0.45}, "lighting": {"ambient": 0.9, "key": 5.5, "fill": 3, "shadows": true}},
+        {"id": "torus-title", "type": "text", "x": 0.62, "y": 0.28, "width": 0.3, "height": 0.28, "text": "Câmera\n+ material", "role": "title", "fontSize": 76, "align": "left", "enter": {"preset": "slide-right", "durationSeconds": 0.7}},
+        {"id": "torus-note", "type": "text", "x": 0.62, "y": 0.59, "width": 0.28, "height": 0.09, "text": "Frame a frame • determinístico", "role": "caption", "color": "#A8C1D8", "enter": {"preset": "fade", "delaySeconds": 0.4, "durationSeconds": 0.5}}
+      ]
+    },
+    {
+      "id": "cube",
+      "title": "Exportação",
+      "durationSeconds": 5,
+      "transition": {"type": "zoom", "durationSeconds": 0.5},
+      "narration": "O resultado é composto com textos e exportado como MP4.",
+      "captions": [{"id": "cube-caption", "startSeconds": 0.4, "endSeconds": 4.5, "text": "3D + motion graphics → MP4"}],
+      "elements": [
+        {"id": "cube-title", "type": "text", "x": 0.08, "y": 0.27, "width": 0.43, "height": 0.28, "text": "3D + motion\nno mesmo projeto", "role": "title", "fontSize": 74, "maxLines": 3, "enter": {"preset": "slide-up", "durationSeconds": 0.7}},
+        {"id": "cube-3d", "type": "three", "x": 0.5, "y": 0.1, "width": 0.43, "height": 0.75, "primitive": "box", "style": "3d-minimal", "material": "physical", "color": "#F05A47", "accentColor": "#69A7FF", "rotationSpeed": [0.52, 0.72, 0.24], "camera": {"position": [0, 0.6, 5.5], "target": [0, 0, 0], "orbitRadius": 0.8, "orbitSpeed": 0.36}, "lighting": {"ambient": 1.1, "key": 5, "fill": 2.6, "shadows": true}}
+      ]
+    }
+  ]
+}

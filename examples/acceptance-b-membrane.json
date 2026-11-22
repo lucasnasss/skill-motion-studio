@@ -1,0 +1,383 @@
+{
+  "version": "1.0",
+  "title": "Transporte através da membrana plasmática",
+  "prompt": "Vídeo educativo de 45 segundos explicando transporte através da membrana plasmática, com rigor científico.",
+  "objective": "Distinguir difusão simples, difusão facilitada, osmose e transporte ativo.",
+  "audience": "Estudantes do ensino médio e início da graduação",
+  "language": "pt-BR",
+  "theme": "scientific",
+  "video": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "safeMarginPct": 0.06
+  },
+  "captions": {
+    "enabled": true,
+    "burnIn": false,
+    "position": "bottom"
+  },
+  "assets": {"attributions": []},
+  "scenes": [
+    {
+      "id": "intro",
+      "title": "Introdução",
+      "durationSeconds": 4,
+      "transition": {"type": "fade", "durationSeconds": 0.6},
+      "narration": "A membrana plasmática controla a troca de substâncias entre a célula e o ambiente.",
+      "elements": [
+        {
+          "id": "intro-orbit",
+          "type": "shape",
+          "kind": "ring",
+          "x": 0.64,
+          "y": 0.18,
+          "width": 0.22,
+          "height": 0.39,
+          "stroke": "#54D6D0",
+          "strokeWidth": 14,
+          "enter": {"preset": "draw", "durationSeconds": 1.2}
+        },
+        {
+          "id": "intro-kicker",
+          "type": "text",
+          "x": 0.08,
+          "y": 0.18,
+          "width": 0.5,
+          "height": 0.08,
+          "text": "BIOLOGIA CELULAR",
+          "role": "eyebrow",
+          "align": "left",
+          "verticalAlign": "center",
+          "enter": {"preset": "fade", "durationSeconds": 0.5}
+        },
+        {
+          "id": "intro-title",
+          "type": "text",
+          "x": 0.08,
+          "y": 0.29,
+          "width": 0.56,
+          "height": 0.36,
+          "text": "Como substâncias\natravessam a membrana?",
+          "role": "title",
+          "fontSize": 88,
+          "align": "left",
+          "verticalAlign": "center",
+          "maxLines": 3,
+          "enter": {"preset": "slide-up", "delaySeconds": 0.15, "durationSeconds": 0.75, "easing": "ease-out"}
+        },
+        {
+          "id": "intro-subtitle",
+          "type": "text",
+          "x": 0.08,
+          "y": 0.69,
+          "width": 0.6,
+          "height": 0.1,
+          "text": "Gradiente • proteínas • energia",
+          "role": "subtitle",
+          "fontSize": 42,
+          "color": "#A8C1D8",
+          "align": "left",
+          "verticalAlign": "center",
+          "enter": {"preset": "fade", "delaySeconds": 0.55, "durationSeconds": 0.6}
+        }
+      ]
+    },
+    {
+      "id": "structure",
+      "title": "Estrutura da membrana",
+      "durationSeconds": 6,
+      "transition": {"type": "slide-left", "durationSeconds": 0.55},
+      "narration": "A bicamada fosfolipídica possui cabeças hidrofílicas voltadas para a água e caudas hidrofóbicas voltadas para o interior.",
+      "elements": [
+        {
+          "id": "structure-title",
+          "type": "text",
+          "x": 0.07,
+          "y": 0.07,
+          "width": 0.86,
+          "height": 0.11,
+          "text": "1. Uma barreira seletiva",
+          "role": "subtitle",
+          "fontSize": 50,
+          "align": "left",
+          "verticalAlign": "center",
+          "enter": {"preset": "slide-right", "durationSeconds": 0.6}
+        },
+        {
+          "id": "structure-membrane",
+          "type": "membrane",
+          "x": 0.07,
+          "y": 0.21,
+          "width": 0.86,
+          "height": 0.68,
+          "mode": "structure",
+          "outsideLabel": "Meio extracelular",
+          "insideLabel": "Citoplasma",
+          "enter": {"preset": "fade", "delaySeconds": 0.18, "durationSeconds": 0.7}
+        }
+      ]
+    },
+    {
+      "id": "simple-diffusion",
+      "title": "Difusão simples",
+      "durationSeconds": 7,
+      "transition": {"type": "slide-left", "durationSeconds": 0.55},
+      "narration": "Na difusão simples, moléculas pequenas e apolares, como oxigênio e gás carbônico, movem-se a favor do gradiente, sem proteína e sem gasto direto de ATP.",
+      "elements": [
+        {
+          "id": "simple-title",
+          "type": "text",
+          "x": 0.07,
+          "y": 0.07,
+          "width": 0.55,
+          "height": 0.11,
+          "text": "2. Difusão simples",
+          "role": "subtitle",
+          "fontSize": 50,
+          "align": "left",
+          "verticalAlign": "center",
+          "enter": {"preset": "slide-right", "durationSeconds": 0.6}
+        },
+        {
+          "id": "simple-tag",
+          "type": "text",
+          "x": 0.64,
+          "y": 0.08,
+          "width": 0.28,
+          "height": 0.08,
+          "text": "SEM PROTEÍNA • SEM ATP",
+          "role": "label",
+          "fontSize": 25,
+          "color": "#FFCB69",
+          "align": "right",
+          "verticalAlign": "center",
+          "enter": {"preset": "fade", "delaySeconds": 0.3, "durationSeconds": 0.5}
+        },
+        {
+          "id": "simple-membrane",
+          "type": "membrane",
+          "x": 0.07,
+          "y": 0.2,
+          "width": 0.86,
+          "height": 0.68,
+          "mode": "simple-diffusion",
+          "particleLabel": "O₂ / CO₂",
+          "particleColor": "#FFCB69",
+          "highConcentration": "outside",
+          "enter": {"preset": "fade", "durationSeconds": 0.6}
+        }
+      ]
+    },
+    {
+      "id": "facilitated-diffusion",
+      "title": "Difusão facilitada",
+      "durationSeconds": 7,
+      "transition": {"type": "slide-up", "durationSeconds": 0.55},
+      "narration": "Na difusão facilitada, íons ou moléculas polares atravessam por canais ou transportadores, ainda a favor do gradiente e sem gasto direto de ATP.",
+      "elements": [
+        {
+          "id": "facilitated-title",
+          "type": "text",
+          "x": 0.07,
+          "y": 0.07,
+          "width": 0.6,
+          "height": 0.11,
+          "text": "3. Difusão facilitada",
+          "role": "subtitle",
+          "fontSize": 50,
+          "align": "left",
+          "verticalAlign": "center",
+          "enter": {"preset": "slide-right", "durationSeconds": 0.6}
+        },
+        {
+          "id": "facilitated-tag",
+          "type": "text",
+          "x": 0.66,
+          "y": 0.08,
+          "width": 0.26,
+          "height": 0.08,
+          "text": "COM PROTEÍNA • SEM ATP",
+          "role": "label",
+          "fontSize": 25,
+          "color": "#54D6D0",
+          "align": "right",
+          "verticalAlign": "center",
+          "enter": {"preset": "fade", "delaySeconds": 0.3, "durationSeconds": 0.5}
+        },
+        {
+          "id": "facilitated-membrane",
+          "type": "membrane",
+          "x": 0.07,
+          "y": 0.2,
+          "width": 0.86,
+          "height": 0.68,
+          "mode": "facilitated-diffusion",
+          "particleLabel": "Íons / glicose",
+          "particleColor": "#69A7FF",
+          "channelLabel": "Canal ou transportador",
+          "highConcentration": "outside",
+          "enter": {"preset": "fade", "durationSeconds": 0.6}
+        }
+      ]
+    },
+    {
+      "id": "osmosis",
+      "title": "Osmose",
+      "durationSeconds": 7,
+      "transition": {"type": "slide-left", "durationSeconds": 0.55},
+      "narration": "Osmose é o movimento de água através de uma membrana seletiva em direção ao lado com maior concentração de solutos, até o equilíbrio possível.",
+      "elements": [
+        {
+          "id": "osmosis-title",
+          "type": "text",
+          "x": 0.07,
+          "y": 0.07,
+          "width": 0.5,
+          "height": 0.11,
+          "text": "4. Osmose",
+          "role": "subtitle",
+          "fontSize": 50,
+          "align": "left",
+          "verticalAlign": "center",
+          "enter": {"preset": "slide-right", "durationSeconds": 0.6}
+        },
+        {
+          "id": "osmosis-tag",
+          "type": "text",
+          "x": 0.56,
+          "y": 0.08,
+          "width": 0.36,
+          "height": 0.08,
+          "text": "ÁGUA → MAIOR [SOLUTO]",
+          "role": "label",
+          "fontSize": 26,
+          "color": "#69A7FF",
+          "align": "right",
+          "verticalAlign": "center",
+          "enter": {"preset": "fade", "delaySeconds": 0.3, "durationSeconds": 0.5}
+        },
+        {
+          "id": "osmosis-membrane",
+          "type": "membrane",
+          "x": 0.07,
+          "y": 0.2,
+          "width": 0.86,
+          "height": 0.68,
+          "mode": "osmosis",
+          "particleLabel": "Água (H₂O)",
+          "particleColor": "#69A7FF",
+          "highConcentration": "outside",
+          "enter": {"preset": "fade", "durationSeconds": 0.6}
+        }
+      ]
+    },
+    {
+      "id": "active-transport",
+      "title": "Transporte ativo",
+      "durationSeconds": 8,
+      "transition": {"type": "zoom", "durationSeconds": 0.6},
+      "narration": "No transporte ativo, proteínas movem substâncias contra o gradiente. Esse trabalho requer energia, diretamente do ATP ou indiretamente de outro gradiente.",
+      "elements": [
+        {
+          "id": "active-title",
+          "type": "text",
+          "x": 0.07,
+          "y": 0.07,
+          "width": 0.56,
+          "height": 0.11,
+          "text": "5. Transporte ativo",
+          "role": "subtitle",
+          "fontSize": 50,
+          "align": "left",
+          "verticalAlign": "center",
+          "enter": {"preset": "slide-right", "durationSeconds": 0.6}
+        },
+        {
+          "id": "active-tag",
+          "type": "text",
+          "x": 0.6,
+          "y": 0.08,
+          "width": 0.32,
+          "height": 0.08,
+          "text": "CONTRA O GRADIENTE • ENERGIA",
+          "role": "label",
+          "fontSize": 24,
+          "color": "#FFCB69",
+          "align": "right",
+          "verticalAlign": "center",
+          "enter": {"preset": "fade", "delaySeconds": 0.3, "durationSeconds": 0.5}
+        },
+        {
+          "id": "active-membrane",
+          "type": "membrane",
+          "x": 0.07,
+          "y": 0.2,
+          "width": 0.86,
+          "height": 0.68,
+          "mode": "active-transport",
+          "particleLabel": "Íons",
+          "particleColor": "#FFCB69",
+          "channelLabel": "Bomba transportadora",
+          "highConcentration": "outside",
+          "energyLabel": "ATP → ADP + Pi",
+          "enter": {"preset": "fade", "durationSeconds": 0.6}
+        }
+      ]
+    },
+    {
+      "id": "summary",
+      "title": "Resumo",
+      "durationSeconds": 6,
+      "transition": {"type": "fade", "durationSeconds": 0.6},
+      "narration": "A pergunta-chave é: o movimento segue o gradiente, precisa de proteína e exige energia?",
+      "elements": [
+        {
+          "id": "summary-title",
+          "type": "text",
+          "x": 0.08,
+          "y": 0.12,
+          "width": 0.84,
+          "height": 0.13,
+          "text": "Três perguntas para identificar o transporte",
+          "role": "subtitle",
+          "fontSize": 52,
+          "align": "center",
+          "verticalAlign": "center",
+          "enter": {"preset": "slide-up", "durationSeconds": 0.65}
+        },
+        {
+          "id": "summary-process",
+          "type": "process",
+          "x": 0.07,
+          "y": 0.34,
+          "width": 0.86,
+          "height": 0.36,
+          "orientation": "horizontal",
+          "steps": [
+            {"label": "Gradiente", "detail": "a favor ou contra?", "color": "#69A7FF"},
+            {"label": "Proteína", "detail": "canal, transportador ou bomba?", "color": "#54D6D0"},
+            {"label": "Energia", "detail": "há acoplamento energético?", "color": "#FFCB69"}
+          ],
+          "enter": {"preset": "slide-up", "delaySeconds": 0.18, "durationSeconds": 1, "easing": "ease-out"}
+        },
+        {
+          "id": "summary-note",
+          "type": "text",
+          "x": 0.16,
+          "y": 0.79,
+          "width": 0.68,
+          "height": 0.08,
+          "text": "Modelos didáticos • elementos fora de escala",
+          "role": "caption",
+          "fontSize": 28,
+          "color": "#A8C1D8",
+          "align": "center",
+          "verticalAlign": "center",
+          "enter": {"preset": "fade", "delaySeconds": 0.75, "durationSeconds": 0.5}
+        }
+      ]
+    }
+  ]
+}
+

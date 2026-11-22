@@ -1,0 +1,25 @@
+{
+  "version": "2.0",
+  "mode": "create",
+  "style": "print",
+  "title": "Vídeo para apresentação",
+  "objective": "Gerar um MP4 16:9 curto, silencioso e adequado para incorporação em PowerPoint.",
+  "audience": "Público de apresentação corporativa",
+  "language": "pt-BR",
+  "theme": "editorial",
+  "video": {"width": 1920, "height": 1080, "fps": 30, "safeMarginPct": 0.07},
+  "captions": {"enabled": false, "burnIn": false},
+  "timeline": {"durationSeconds": 8, "tracks": [{"id": "slide-overlay", "type": "overlay", "clips": [{"id": "slide-clip", "startSeconds": 0, "durationSeconds": 8, "sceneId": "slide-scene"}]}]},
+  "scenes": [{
+    "id": "slide-scene",
+    "durationSeconds": 8,
+    "transition": {"type": "fade", "durationSeconds": 0.5},
+    "elements": [
+      {"id": "slide-kicker", "type": "text", "x": 0.08, "y": 0.17, "width": 0.5, "height": 0.08, "text": "VÍDEO PARA SLIDES", "role": "eyebrow", "enter": {"preset": "fade", "durationSeconds": 0.5}},
+      {"id": "slide-title", "type": "text", "x": 0.08, "y": 0.29, "width": 0.58, "height": 0.32, "text": "Uma explicação visual\nno ritmo da apresentação", "role": "title", "fontSize": 76, "maxLines": 3, "enter": {"preset": "slide-up", "durationSeconds": 0.8}},
+      {"id": "slide-card", "type": "shape", "kind": "rounded", "x": 0.7, "y": 0.22, "width": 0.2, "height": 0.48, "fill": "#2457D6", "borderRadius": 36, "enter": {"preset": "zoom", "delaySeconds": 0.25, "durationSeconds": 0.8}},
+      {"id": "slide-number", "type": "text", "x": 0.72, "y": 0.31, "width": 0.16, "height": 0.2, "text": "01", "role": "number", "fontSize": 110, "color": "#FFFFFF", "align": "center", "enter": {"preset": "pop", "delaySeconds": 0.5, "durationSeconds": 0.7}},
+      {"id": "slide-note", "type": "text", "x": 0.72, "y": 0.53, "width": 0.16, "height": 0.09, "text": "MP4 • H.264\n16:9", "role": "caption", "fontSize": 25, "color": "#FFFFFF", "align": "center", "maxLines": 2, "enter": {"preset": "fade", "delaySeconds": 0.8, "durationSeconds": 0.5}}
+    ]
+  }]
+}
