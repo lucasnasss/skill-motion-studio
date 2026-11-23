@@ -1,0 +1,12 @@
+{
+  "version":"2.0","mode":"create","style":"print","title":"Teste de narração documental",
+  "objective":"Avaliar pausas e transições narrativas","audience":"Público geral","language":"pt-BR","theme":"editorial",
+  "video":{"width":1280,"height":720,"fps":30,"safeMarginPct":0.08},
+  "captions":{"enabled":true,"burnIn":true,"position":"bottom","style":"traditional","fontSize":32},
+  "timeline":{"durationSeconds":7,"tracks":[{"id":"visual","type":"overlay","clips":[{"id":"documentary-visual","startSeconds":0,"durationSeconds":7,"sceneId":"documentary"}]}]},
+  "scenes":[{"id":"documentary","durationSeconds":7,"narration":"Ao cair da tarde, a floresta parece silenciar. Mas, entre as folhas, uma nova paisagem sonora começa a surgir... Primeiro, um chamado distante; depois, o movimento discreto de quem desperta para a noite.","elements":[
+    {"id":"kicker","type":"text","x":0.09,"y":0.16,"width":0.5,"height":0.08,"text":"DEPOIS DO PÔR DO SOL","role":"eyebrow"},
+    {"id":"title","type":"text","x":0.09,"y":0.29,"width":0.68,"height":0.26,"text":"A FLORESTA\nMUDA DE VOZ","role":"title","maxLines":2,"enter":{"preset":"fade","durationSeconds":1}},
+    {"id":"moon","type":"shape","kind":"circle","x":0.77,"y":0.16,"width":0.12,"height":0.21,"fill":"#FFCB69","opacity":0.9,"enter":{"preset":"zoom","durationSeconds":1}}
+  ]}]
+}

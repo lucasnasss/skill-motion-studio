@@ -1,6 +1,6 @@
 {
   "name": "motion-studio-skill",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "private": true,
   "type": "module",
   "description": "Runtime local da Agent Skill Motion Studio Pro para criação, edição e animação 2D/3D.",

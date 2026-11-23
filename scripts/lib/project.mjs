@@ -69,6 +69,9 @@ export const validateProject = (project) => {
       if (clip.outPointSeconds !== undefined && clip.inPointSeconds !== undefined && clip.outPointSeconds <= clip.inPointSeconds) {
         errors.push(`/timeline/${clip.id}: outPointSeconds deve ser maior que inPointSeconds.`);
       }
+      if (track.type === 'audio' && clip.playbackRate !== undefined && clip.playbackRate !== 1) {
+        errors.push(`/timeline/${clip.id}: narração deve usar playbackRate 1.0; ajuste a duração da cena ao áudio.`);
+      }
     }
   }
   const editRanges = project.edit?.keepRanges ?? [];

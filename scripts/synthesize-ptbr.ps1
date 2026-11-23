@@ -2,7 +2,7 @@ param(
   [Parameter(Mandatory = $true)]
   [string]$ProjectPath,
   [string]$VoiceName = 'Microsoft Maria',
-  [double]$SpeakingRate = 1.08,
+  [double]$SpeakingRate = 1.0,
   [string]$FilePrefix = 'narracao'
 )
 

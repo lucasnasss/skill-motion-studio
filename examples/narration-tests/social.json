@@ -1,0 +1,12 @@
+{
+  "version":"2.0","mode":"create","style":"mixed","title":"Teste de narração para redes sociais",
+  "objective":"Avaliar dinamismo sem aceleração excessiva","audience":"Público de redes sociais","language":"pt-BR","theme":"modern",
+  "video":{"width":1080,"height":1920,"fps":30,"safeMarginPct":0.08},
+  "captions":{"enabled":true,"burnIn":true,"position":"bottom","style":"highlight","fontSize":36},
+  "timeline":{"durationSeconds":6,"tracks":[{"id":"visual","type":"overlay","clips":[{"id":"social-visual","startSeconds":0,"durationSeconds":6,"sceneId":"social"}]}]},
+  "scenes":[{"id":"social","durationSeconds":6,"narration":"Você sabia que pequenas pausas deixam um vídeo mais fácil de entender? O segredo não é falar depressa. É destacar a ideia certa, respirar e conduzir o público até a conclusão.","elements":[
+    {"id":"eyebrow","type":"text","x":0.12,"y":0.13,"width":0.76,"height":0.08,"text":"RITMO QUE PRENDE","role":"eyebrow","align":"center"},
+    {"id":"title","type":"text","x":0.1,"y":0.27,"width":0.8,"height":0.3,"text":"NÃO É FALAR\nMAIS RÁPIDO","role":"title","align":"center","maxLines":2,"enter":{"preset":"pop","durationSeconds":0.7}},
+    {"id":"note","type":"text","x":0.16,"y":0.62,"width":0.68,"height":0.1,"text":"clareza • pausa • ênfase","role":"subtitle","align":"center"}
+  ]}]
+}

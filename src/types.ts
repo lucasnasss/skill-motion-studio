@@ -221,7 +221,7 @@ export type Scene = {
     durationSeconds?: number;
   };
   narration?: string;
-  audio?: {src: string; volume?: number; loop?: boolean};
+  audio?: {src: string; volume?: number; loop?: boolean; playbackRate?: 1};
   captions?: CaptionCue[];
   elements: Element[];
 };
@@ -307,6 +307,16 @@ export type MotionProject = {
     keepRanges?: Array<{startSeconds: number; endSeconds: number; reason?: string}>;
     normalizeAudio?: boolean;
     targetAspect?: 'source' | '16:9' | '9:16' | '1:1';
+  };
+  tts?: {
+    provider?: 'onecore' | 'kokoro' | 'elevenlabs';
+    voice?: string;
+    model?: string;
+    preset?: 'educational' | 'documentary' | 'social' | 'institutional';
+    speed?: number;
+    style?: number;
+    stability?: number;
+    similarityBoost?: number;
   };
   scenes: Scene[];
 };

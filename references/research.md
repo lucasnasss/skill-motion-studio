@@ -35,3 +35,9 @@ Remotion 4.0.545 foi fixado com todos os pacotes na mesma versão. A renderizaç
 
 O núcleo inclui TTS local opcional no Windows e 3D integrado determinístico. Blender, faster-whisper e Auto-Editor permanecem opcionais e não foram instalados no ambiente de aceitação. Música automática, geração de imagem/vídeo por IA, busca autônoma de mídia e interface visual própria não fazem parte do núcleo offline. Essa separação reduz custos, dependências e falhas não determinísticas.
 
+## TTS natural — revisão de 22 de novembro de 2026
+
+- A API oficial da [ElevenLabs](https://elevenlabs.io/docs/api-reference/text-to-speech/convert/) aceita `eleven_multilingual_v2`, configurações por voz e saída MP3/PCM; o modelo suporta [português do Brasil](https://elevenlabs.io/docs/help-center/other/what-languages-do-you-support). A integração usa variável de ambiente e não persiste chaves.
+- [Kokoro 0.9.4](https://github.com/hexgrad/kokoro/blob/main/pyproject.toml) e os pesos [Kokoro-82M](https://huggingface.co/hexgrad/Kokoro-82M) usam Apache-2.0. O pacote oficial requer Python 3.10–3.13. As vozes pt-BR oficiais são `pf_dora`, `pm_alex` e `pm_santa` e dependem de espeak-ng para G2P.
+- ElevenLabs é serviço pago por uso/plano e pode impor direitos comerciais conforme assinatura. Kokoro é local, mas baixa pesos e dependências grandes. OneCore permanece fallback instalado no Windows, com qualidade dependente da voz do sistema.
+

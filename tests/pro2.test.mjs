@@ -5,6 +5,8 @@ import path from 'node:path';
 import {buildKeepRanges, createEditProject, parseSilenceDetect, parseVolumeDetect} from '../scripts/lib/editor.mjs';
 import {projectQuality} from '../scripts/lib/quality.mjs';
 import {ROOT, projectToSrt, validateProject} from '../scripts/lib/project.mjs';
+import {analyzeSamples} from '../scripts/lib/audio-quality.mjs';
+import {normalizeNarrationText, resolveTtsSettings, synchronizeProjectToNarration} from '../scripts/lib/tts.mjs';
 
 test('detecção de silêncio converte eventos do FFmpeg em intervalos', () => {
   const diagnostic = '[silencedetect] silence_start: 1.2\n[silencedetect] silence_end: 2.4 | silence_duration: 1.2\n[silencedetect] silence_start: 7.5';
@@ -81,5 +83,42 @@ test('SRT usa cues temporizados e Quality Inspector detecta colisão de textos',
   };
   assert.match(projectToSrt(project), /00:00:00,500 --> 00:00:02,000/);
   assert.equal(projectQuality(project).textOverlaps.length, 1);
+});
+
+test('normalização TTS preserva pontuação e prepara termos pt-BR', () => {
+  assert.equal(normalizeNarrationText('A IA mede 25% a 30 °C'), 'A I A mede 25 por cento a 30 graus Celsius.');
+  assert.equal(normalizeNarrationText('DNA e pH', {DNA: 'dê ene á'}), 'dê ene á e pê agá.');
+});
+
+test('presets TTS mantêm velocidade moderada e intercambiam provedores', () => {
+  const educational = resolveTtsSettings({provider: 'onecore', preset: 'educational'});
+  const documentary = resolveTtsSettings({provider: 'kokoro', preset: 'documentary', voice: 'pf_dora'});
+  assert.ok(educational.speed <= 1);
+  assert.equal(documentary.provider, 'kokoro');
+  assert.equal(documentary.voice, 'pf_dora');
+  assert.throws(() => resolveTtsSettings({speed: 1.5}), /entre 0.7 e 1.2/);
+});
+
+test('sincronização faz cenas seguirem áudio sem acelerar narração', () => {
+  const project = {
+    version: '2.0', mode: 'create', title: 'Voz', objective: 'Teste', audience: 'Geral', language: 'pt-BR', theme: 'minimal',
+    video: {width: 1920, height: 1080, fps: 30},
+    timeline: {durationSeconds: 2, tracks: [{id: 'visual', type: 'overlay', clips: [{id: 'visual-1', startSeconds: 0, durationSeconds: 2, sceneId: 'scene'}]}]},
+    scenes: [{id: 'scene', durationSeconds: 2, narration: 'Texto claro.', elements: [{id: 'text', type: 'text', x: 0.1, y: 0.1, width: 0.8, height: 0.2, text: 'Texto'}]}],
+  };
+  const generated = new Map([['scene', {src: 'audio/test.wav', durationSeconds: 3.21}]]);
+  const result = synchronizeProjectToNarration(project, generated, {padding: 0.3, settings: {provider: 'onecore', preset: 'educational', speed: 1}});
+  assert.equal(result.scenes[0].durationSeconds, 3.533333333333333);
+  assert.equal(result.scenes[0].audio.playbackRate, 1);
+  assert.equal(result.timeline.tracks[0].clips[0].durationSeconds, result.scenes[0].durationSeconds);
+  assert.equal(result.timeline.tracks.find((track) => track.id === 'narration').clips[0].playbackRate, 1);
+  assert.throws(() => synchronizeProjectToNarration(project, generated, {targetDuration: 2}), /não será acelerada/);
+});
+
+test('analisador PCM detecta clipping sem depender de filtros FFmpeg opcionais', () => {
+  const clean = Float64Array.from({length: 4800}, (_, index) => Math.sin(index / 12) * 0.25);
+  const clipped = clean.slice(); clipped[100] = 1;
+  assert.equal(analyzeSamples(clean, 48000).pass, true);
+  assert.equal(analyzeSamples(clipped, 48000).clippingSamples, 1);
 });
 

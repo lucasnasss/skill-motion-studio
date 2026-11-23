@@ -23,6 +23,8 @@ import {
 } from './lib/editor.mjs';
 import {parseBlackDetect, projectQuality, unexpectedBlackSegments} from './lib/quality.mjs';
 import {instantiateScene, readSceneLibrary} from './lib/scene-library.mjs';
+import {analyzePcm16Wav} from './lib/audio-quality.mjs';
+import {normalizeNarrationText, readTtsConfig, resolveTtsSettings, synchronizeProjectToNarration} from './lib/tts.mjs';
 
 const ENTRY = path.join(ROOT, 'src', 'index.ts');
 const COMPOSITION = 'MotionStudio';
@@ -86,7 +88,10 @@ const run = (command, args, {capture = false, quiet = false} = {}) =>
     child.on('error', reject);
     child.on('exit', (code) => {
       if (code === 0) resolve({stdout, stderr});
-      else reject(new Error(`Comando terminou com código ${code}: ${command} ${args.join(' ')}`));
+      else {
+        const detail = capture ? `\n${(stderr || stdout).trim().slice(-1200)}` : '';
+        reject(new Error(`Comando terminou com código ${code}: ${command} ${args.join(' ')}${detail}`));
+      }
     });
   });
 
@@ -98,6 +103,16 @@ const executableAvailable = (name) => new Promise((resolve) => {
   child.on('error', () => resolve(false));
   child.on('exit', (code) => resolve(code === 0));
 });
+
+const runFfprobe = async (args, options = {}) => {
+  try {
+    return await runRemotion(['ffprobe', ...args], options);
+  } catch (remotionError) {
+    if (!(await executableAvailable('ffprobe'))) throw remotionError;
+    if (!options.quiet) console.warn('AVISO: FFprobe do Remotion indisponível; usando o FFprobe instalado no sistema.');
+    return run('ffprobe', args, options);
+  }
+};
 
 const concurrencyArgs = (options) => (options.concurrency ? [`--concurrency=${options.concurrency}`] : []);
 
@@ -202,8 +217,8 @@ const inspectMediaCommand = async (inputFile, options = {}) => {
   if (!inputFile) throw new Error('Uso: analyze <video> [--out relatorio.json]');
   const input = path.resolve(inputFile);
   if (!fs.existsSync(input)) throw new Error(`Vídeo não encontrado: ${input}`);
-  const probeResult = await runRemotion(
-    ['ffprobe', '-v', 'error', '-show_streams', '-show_format', '-of', 'json', input],
+  const probeResult = await runFfprobe(
+    ['-v', 'error', '-show_streams', '-show_format', '-of', 'json', input],
     {capture: true, quiet: true},
   );
   const probe = extractJson(`${probeResult.stdout}\n${probeResult.stderr}`);
@@ -300,8 +315,8 @@ const verifyCommand = async (projectFile, videoFile) => {
   const {project} = validateCommand(projectFile);
   const video = path.resolve(videoFile);
   if (!fs.existsSync(video)) throw new Error(`Vídeo não encontrado: ${video}`);
-  const probeResult = await runRemotion(
-    ['ffprobe', '-v', 'error', '-show_streams', '-show_format', '-of', 'json', video],
+  const probeResult = await runFfprobe(
+    ['-v', 'error', '-show_streams', '-show_format', '-of', 'json', video],
     {capture: true, quiet: true},
   );
   const probe = extractJson(`${probeResult.stdout}\n${probeResult.stderr}`);
@@ -411,65 +426,198 @@ const srtCommand = (file, output) => {
   return target;
 };
 
+const ttsDefaultsFile = path.join(ROOT, '.motion-studio', 'tts.json');
+const savedTtsDefaults = () => fs.existsSync(ttsDefaultsFile) ? JSON.parse(fs.readFileSync(ttsDefaultsFile, 'utf8')) : {};
+
+const audioDuration = async (file) => {
+  const result = await runFfprobe(['-v', 'error', '-show_format', '-of', 'json', file], {capture: true, quiet: true});
+  const duration = Number(extractJson(`${result.stdout}\n${result.stderr}`).format?.duration);
+  if (!Number.isFinite(duration) || duration <= 0) throw new Error(`Duração de áudio inválida: ${file}`);
+  return duration;
+};
+
+const normalizeAudioFile = async (source, target, {loudness = false} = {}) => {
+  ensureParent(target);
+  const args = ['ffmpeg', '-y', '-hide_banner', '-i', source, '-vn'];
+  if (loudness) args.push('-af', 'loudnorm=I=-16:TP=-1.5:LRA=11');
+  args.push('-ac', '1', '-ar', '48000', '-c:a', 'pcm_s16le', target);
+  await runRemotion(args, {capture: true, quiet: true});
+  if (!fs.existsSync(target) || fs.statSync(target).size < 1024) throw new Error(`Conversão PCM não produziu arquivo válido: ${target}`);
+};
+
+const synthesizeText = async (text, target, settings, options = {}) => {
+  const temporary = `${target}.${settings.provider}.source${settings.provider === 'elevenlabs' ? '.mp3' : '.wav'}`;
+  ensureParent(temporary);
+  try {
+    if (settings.provider === 'onecore') {
+      if (process.platform !== 'win32') throw new Error('OneCore só está disponível no Windows.');
+      const script = path.join(ROOT, 'scripts', 'tts', 'onecore.ps1');
+      await run('powershell.exe', ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', script, '-Text', text, '-Output', temporary, '-VoiceName', settings.voice, '-Speed', String(settings.speed)], {capture: true, quiet: true});
+    } else if (settings.provider === 'kokoro') {
+      const python = String(options.python ?? process.env.KOKORO_PYTHON ?? 'python');
+      await run(python, [path.join(ROOT, 'scripts', 'tts', 'kokoro.py'), '--text', text, '--out', temporary, '--voice', settings.voice || 'pf_dora', '--speed', String(settings.speed), '--language', 'p'], {capture: true, quiet: true});
+    } else if (settings.provider === 'elevenlabs') {
+      const key = process.env.ELEVENLABS_API_KEY;
+      if (!key) throw new Error('Defina ELEVENLABS_API_KEY no ambiente. A chave nunca é gravada no projeto ou nos logs.');
+      if (!settings.voice) throw new Error('ElevenLabs requer --voice com o voice ID da sua biblioteca.');
+      const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(settings.voice)}?output_format=mp3_44100_128`, {
+        method: 'POST', headers: {'xi-api-key': key, 'content-type': 'application/json'},
+        body: JSON.stringify({text, model_id: settings.model || 'eleven_multilingual_v2', apply_text_normalization: 'on', voice_settings: {
+          stability: settings.stability, similarity_boost: settings.similarityBoost, style: settings.style,
+          use_speaker_boost: true, speed: settings.speed,
+        }}),
+      });
+      if (!response.ok) throw new Error(`ElevenLabs respondeu HTTP ${response.status}: ${(await response.text()).slice(0, 400)}`);
+      fs.writeFileSync(temporary, Buffer.from(await response.arrayBuffer()));
+    }
+    if (options['preserve-source']) {
+      const rawTarget = target.replace(/\.wav$/i, `.source${path.extname(temporary) || '.bin'}`);
+      fs.copyFileSync(temporary, rawTarget);
+    }
+    await normalizeAudioFile(temporary, target, {loudness: options.normalize !== 'false'});
+  } finally {
+    fs.rmSync(temporary, {force: true});
+  }
+  const quality = analyzePcm16Wav(target);
+  if (!quality.pass) throw new Error(`Áudio reprovado: clipping=${quality.clippingSamples}, salto máximo=${quality.maxAdjacentJump.toFixed(3)}.`);
+  return quality;
+};
+
+const ttsPreviewCommand = async (options = {}) => {
+  const text = String(options.text ?? '').trim();
+  if (!text) throw new Error('Use tts-preview --text "frase para comparar" --provider onecore|kokoro|elevenlabs.');
+  const settings = resolveTtsSettings(options, savedTtsDefaults());
+  const normalized = normalizeNarrationText(text, options.pronunciation ? JSON.parse(fs.readFileSync(path.resolve(String(options.pronunciation)), 'utf8')) : {});
+  const target = path.resolve(String(options.out ?? path.join(ROOT, 'output', 'voice-previews', `${settings.provider}-${settings.voice || 'voice'}-${settings.preset}.wav`.replace(/[^a-z0-9._-]+/gi, '-'))));
+  const quality = await synthesizeText(normalized, target, settings, options);
+  fs.writeFileSync(`${target}.quality.json`, `${JSON.stringify({settings: {...settings, apiKey: undefined}, normalizedText: normalized, quality}, null, 2)}\n`, 'utf8');
+  console.log(`Amostra de voz: ${target}`);
+  console.log(`Duração ${quality.durationSeconds.toFixed(2)} s | pico ${quality.peakDbfs.toFixed(1)} dBFS | RMS ${quality.rmsDbfs.toFixed(1)} dBFS`);
+  return target;
+};
+
+const ttsCompareCommand = async (options = {}) => {
+  const text = String(options.text ?? '').trim();
+  const candidates = String(options.candidates ?? 'onecore:Microsoft Maria,kokoro:pf_dora').split(',').map((value) => value.trim()).filter(Boolean);
+  if (!text || !candidates.length) throw new Error('Use tts-compare --text "..." --candidates "onecore:Microsoft Maria,kokoro:pf_dora,elevenlabs:VOICE_ID".');
+  const directory = path.resolve(String(options.out ?? path.join(ROOT, 'output', 'voice-comparison')));
+  fs.mkdirSync(directory, {recursive: true});
+  const results = [];
+  for (const candidate of candidates) {
+    const separator = candidate.indexOf(':');
+    const provider = separator < 0 ? candidate : candidate.slice(0, separator);
+    const voice = separator < 0 ? '' : candidate.slice(separator + 1);
+    const out = path.join(directory, `${provider}-${voice || 'default'}-${options.preset ?? 'educational'}.wav`.replace(/[^a-z0-9._-]+/gi, '-'));
+    try {
+      await ttsPreviewCommand({...options, provider, voice, out});
+      results.push({provider, voice, status: 'generated', file: out});
+    } catch (error) {
+      results.push({provider, voice, status: 'unavailable', error: error.message});
+      console.warn(`AVISO: ${provider}/${voice || 'default'} indisponível: ${error.message}`);
+    }
+  }
+  const manifest = {generatedAt: new Date().toISOString(), text, preset: options.preset ?? 'educational', results,
+    note: 'A escolha de naturalidade exige comparação auditiva humana.'};
+  fs.writeFileSync(path.join(directory, 'comparison.json'), `${JSON.stringify(manifest, null, 2)}\n`, 'utf8');
+  if (!results.some((result) => result.status === 'generated')) throw new Error('Nenhuma amostra pôde ser gerada.');
+  console.log(`Comparação de vozes: ${directory}`);
+  return manifest;
+};
+
 const ttsCommand = async (file, output, options = {}) => {
-  if (process.platform !== 'win32') throw new Error('O adaptador TTS local incluído usa vozes OneCore do Windows. Configure outro provedor em sistemas diferentes.');
   const {project} = validateCommand(file);
-  const script = path.join(ROOT, 'scripts', 'synthesize-ptbr.ps1');
+  const settings = resolveTtsSettings(options, savedTtsDefaults());
   const prefix = String(options.prefix ?? `tts-${path.basename(file, path.extname(file)).toLowerCase().replace(/[^a-z0-9]+/g, '-')}`);
-  const args = ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', script, '-ProjectPath', path.resolve(file), '-FilePrefix', prefix];
-  if (options.voice) args.push('-VoiceName', String(options.voice));
-  if (options.rate) args.push('-SpeakingRate', String(options.rate));
-  const result = await run('powershell.exe', args, {capture: true, quiet: true});
+  const pronunciation = options.pronunciation ? JSON.parse(fs.readFileSync(path.resolve(String(options.pronunciation)), 'utf8')) : {};
   const generated = new Map();
-  for (const line of result.stdout.split(/\r?\n/)) {
-    const separator = line.indexOf('\t');
-    if (separator < 1) continue;
-    const sceneId = line.slice(0, separator).trim();
-    const audioFile = line.slice(separator + 1).trim();
-    if (sceneId && fs.existsSync(audioFile)) generated.set(sceneId, audioFile);
+  for (const scene of project.scenes) {
+    if (!scene.narration?.trim()) continue;
+    const normalizedText = normalizeNarrationText(scene.narration, pronunciation);
+    const absoluteAudio = path.join(ROOT, 'public', 'audio', `${prefix}-${scene.id}.wav`);
+    const quality = await synthesizeText(normalizedText, absoluteAudio, settings, options);
+    generated.set(scene.id, {file: absoluteAudio, src: path.relative(path.join(ROOT, 'public'), absoluteAudio).replaceAll('\\', '/'), durationSeconds: quality.durationSeconds, quality, normalizedText});
+    console.log(`${scene.id}: ${quality.durationSeconds.toFixed(2)} s | ${quality.peakDbfs.toFixed(1)} dBFS peak`);
   }
-  if (!generated.size) throw new Error(`O TTS não produziu arquivos. Saída: ${result.stderr || result.stdout || '(vazia)'}`);
-  const updated = structuredClone(project);
-  for (const scene of updated.scenes) {
-    const audioFile = generated.get(scene.id);
-    if (!audioFile) continue;
-    const publicRoot = path.resolve(ROOT, 'public');
-    const absoluteAudio = path.resolve(audioFile);
-    if (!absoluteAudio.startsWith(`${publicRoot}${path.sep}`)) throw new Error(`TTS produziu arquivo fora de public/: ${absoluteAudio}`);
-    scene.audio = {src: path.relative(publicRoot, absoluteAudio).replaceAll('\\', '/'), volume: 1};
-    if (options.sync) {
-      const probeResult = await runRemotion(['ffprobe', '-v', 'error', '-show_format', '-of', 'json', absoluteAudio], {capture: true, quiet: true});
-      const probe = extractJson(`${probeResult.stdout}\n${probeResult.stderr}`);
-      const duration = Number(probe.format?.duration);
-      if (Number.isFinite(duration) && duration > 0) scene.durationSeconds = Number((duration + Number(options.padding ?? 0.2)).toFixed(3));
-    }
-    if (!scene.captions?.length && scene.narration?.trim()) {
-      scene.captions = [{id: `${scene.id}-caption`, startSeconds: 0, endSeconds: scene.durationSeconds, text: scene.narration.trim()}];
-    }
-  }
-  if (updated.version === '2.0' && updated.timeline) {
-    updated.timeline.durationSeconds = totalSeconds(updated);
-    const tracks = updated.timeline.tracks ?? [];
-    let audioTrack = tracks.find((track) => track.id === 'narration');
-    if (!audioTrack) {
-      audioTrack = {id: 'narration', type: 'audio', clips: []};
-      tracks.push(audioTrack);
-    }
-    let cursor = 0;
-    audioTrack.clips = [];
-    for (const scene of updated.scenes) {
-      if (scene.audio) audioTrack.clips.push({id: `narration-${String(audioTrack.clips.length + 1).padStart(3, '0')}`, startSeconds: cursor, durationSeconds: scene.durationSeconds, sceneId: scene.id, volume: scene.audio.volume ?? 1});
-      cursor += scene.durationSeconds;
-    }
-  }
+  if (!generated.size) throw new Error('Nenhuma cena com narração foi encontrada.');
+  const updated = synchronizeProjectToNarration(project, generated, {
+    padding: options.padding ?? 0.35,
+    targetDuration: options['target-duration'], settings,
+  });
   assertValidProject(updated);
   const target = path.resolve(output ?? `${path.resolve(file)}.tts.json`);
   if (fs.existsSync(target) && !options.force) throw new Error(`O arquivo já existe: ${target}. Use --force para substituí-lo.`);
   ensureParent(target);
   fs.writeFileSync(target, `${JSON.stringify(updated, null, 2)}\n`, 'utf8');
-  console.log(`Projeto com TTS local: ${target}`);
-  console.log(`Voz sintética local aplicada a ${generated.size} cena(s). Revise naturalidade e pronúncia antes de publicar.`);
+  const report = {generatedAt: new Date().toISOString(), provider: settings.provider, settings, sourceProject: path.resolve(file), outputProject: target,
+    rule: 'As cenas seguem a duração real da narração; playbackRate permanece 1.0.', scenes: Object.fromEntries([...generated].map(([id, value]) => [id, {src: value.src, normalizedText: value.normalizedText, quality: value.quality}]))};
+  fs.writeFileSync(`${target}.audio-report.json`, `${JSON.stringify(report, null, 2)}\n`, 'utf8');
+  if (options['save-default']) {
+    ensureParent(ttsDefaultsFile); fs.writeFileSync(ttsDefaultsFile, `${JSON.stringify(settings, null, 2)}\n`, 'utf8');
+    console.log(`Preferência salva sem chave de API: ${ttsDefaultsFile}`);
+  }
+  console.log(`Projeto sincronizado à narração: ${target} (${totalSeconds(updated).toFixed(2)} s)`);
+  console.log('Faça avaliação auditiva da naturalidade antes de publicar.');
   return target;
+};
+
+const ttsVoicesCommand = async (options = {}) => {
+  const provider = String(options.provider ?? 'onecore');
+  if (provider === 'onecore') {
+    const result = await run('powershell.exe', ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', path.join(ROOT, 'scripts', 'tts', 'onecore.ps1'), '-Text', 'x', '-Output', path.join(ROOT, '.render-temp', 'unused.wav'), '-ListVoices'], {capture: true, quiet: true});
+    console.log(result.stdout.trim()); return;
+  }
+  if (provider === 'kokoro') { console.log('pf_dora\tpt-BR\tfemale\npm_alex\tpt-BR\tmale\npm_santa\tpt-BR\tmale'); return; }
+  if (provider === 'elevenlabs') {
+    const key = process.env.ELEVENLABS_API_KEY; if (!key) throw new Error('Defina ELEVENLABS_API_KEY no ambiente.');
+    const response = await fetch('https://api.elevenlabs.io/v2/voices?page_size=100', {headers: {'xi-api-key': key}});
+    if (!response.ok) throw new Error(`ElevenLabs respondeu HTTP ${response.status}.`);
+    const body = await response.json(); for (const voice of body.voices ?? []) console.log(`${voice.voice_id}\t${voice.name}`); return;
+  }
+  throw new Error(`Provedor desconhecido: ${provider}`);
+};
+
+const audioInspectCommand = async (inputFile, options = {}) => {
+  if (!inputFile) throw new Error('Uso: audio-inspect <audio-ou-video> [--out relatorio.json --preserve-pcm]');
+  const input = path.resolve(inputFile);
+  if (!fs.existsSync(input)) throw new Error(`Arquivo não encontrado: ${input}`);
+  const pcm = path.resolve(String(options.pcm ?? path.join(ROOT, '.render-temp', `audio-inspect-${Date.now()}.wav`)));
+  await normalizeAudioFile(input, pcm, {loudness: false});
+  const quality = analyzePcm16Wav(pcm);
+  const report = {generatedAt: new Date().toISOString(), input, standardizedPcm: options['preserve-pcm'] ? pcm : null, quality};
+  const target = path.resolve(String(options.out ?? `${input}.audio-quality.json`));
+  ensureParent(target); fs.writeFileSync(target, `${JSON.stringify(report, null, 2)}\n`, 'utf8');
+  if (!options['preserve-pcm']) fs.rmSync(pcm, {force: true});
+  console.log(`Relatório de áudio: ${target}`);
+  console.log(`Duração ${quality.durationSeconds.toFixed(2)} s | pico ${quality.peakDbfs.toFixed(1)} dBFS | clipping ${quality.clippingSamples}`);
+  return report;
+};
+
+const audioCompareCommand = async (projectFile, videoFile, options = {}) => {
+  if (!projectFile || !videoFile) throw new Error('Uso: audio-compare <projeto.json> <video.mp4> [--out relatorio.json]');
+  const {project} = validateCommand(projectFile);
+  const videoReport = await audioInspectCommand(videoFile, {out: path.join(ROOT, '.render-temp', `embedded-${Date.now()}.json`)});
+  const scenes = [];
+  for (const scene of project.scenes) {
+    if (!scene.audio) continue;
+    const source = path.resolve(ROOT, 'public', scene.audio.src.replaceAll('/', path.sep));
+    const duration = await audioDuration(source);
+    let sourceQuality = null;
+    try { sourceQuality = analyzePcm16Wav(source); } catch { /* formatos externos permanecem verificáveis por FFprobe */ }
+    scenes.push({id: scene.id, source: scene.audio.src, sourceDurationSeconds: duration, sceneDurationSeconds: scene.durationSeconds,
+      sourceQuality, truncationRisk: duration > scene.durationSeconds + 1 / project.video.fps});
+  }
+  const playbackRates = (project.timeline?.tracks ?? []).filter((track) => track.type === 'audio').flatMap((track) => track.clips.map((clip) => clip.playbackRate ?? 1));
+  const report = {
+    generatedAt: new Date().toISOString(), project: path.resolve(projectFile), video: path.resolve(videoFile),
+    rule: 'A narração deve permanecer em playbackRate 1.0; cenas seguem a duração do WAV.', scenes,
+    embedded: videoReport.quality, playbackRates,
+    pass: scenes.every((scene) => !scene.truncationRisk && (scene.sourceQuality?.clippingSamples ?? 0) === 0)
+      && playbackRates.every((rate) => rate === 1) && videoReport.quality.clippingSamples === 0,
+  };
+  const target = path.resolve(String(options.out ?? `${path.resolve(videoFile)}.audio-compare.json`));
+  ensureParent(target); fs.writeFileSync(target, `${JSON.stringify(report, null, 2)}\n`, 'utf8');
+  console.log(`Comparação de áudio: ${target} | ${report.pass ? 'aprovada' : 'reprovada'}`);
+  return report;
 };
 
 const pipelineCommand = async (file, output, options) => {
@@ -523,7 +671,7 @@ const doctorCommand = async () => {
   const template = readProject(path.join(ROOT, 'assets', 'project-template.json')).project;
   assertValidProject(template);
   const ffmpeg = await runRemotion(['ffmpeg', '-version'], {capture: true, quiet: true});
-  const ffprobe = await runRemotion(['ffprobe', '-version'], {capture: true, quiet: true});
+  const ffprobe = await runFfprobe(['-version'], {capture: true, quiet: true});
   console.log(`Node: ${process.versions.node}`);
   console.log(`Remotion: ${packageFiles[0].version} | CLI: ${packageFiles[1].version}`);
   console.log(`3D: @remotion/three ${packageFiles[2].version} | R3F ${packageFiles[3].version} | Three.js ${packageFiles[4].version}`);
@@ -534,8 +682,10 @@ const doctorCommand = async () => {
     blender: await executableAvailable(process.platform === 'win32' ? 'blender.exe' : 'blender'),
     autoEditor: await executableAvailable(process.platform === 'win32' ? 'auto-editor.exe' : 'auto-editor'),
     fasterWhisper: await executableAvailable(process.platform === 'win32' ? 'faster-whisper.exe' : 'faster-whisper'),
+    espeakNg: await executableAvailable(process.platform === 'win32' ? 'espeak-ng.exe' : 'espeak-ng'),
   };
   console.log(`Opcionais: Python=${optional.python ? 'disponível' : 'ausente'} | Blender=${optional.blender ? 'disponível' : 'ausente'} | Auto-Editor=${optional.autoEditor ? 'disponível' : 'ausente'} | faster-whisper CLI=${optional.fasterWhisper ? 'disponível' : 'ausente'}`);
+  console.log(`TTS: OneCore=${process.platform === 'win32' ? 'disponível' : 'ausente'} | Kokoro runtime=${optional.python && optional.espeakNg ? 'pré-requisitos encontrados' : 'incompleto (requer Python 3.10–3.13 + espeak-ng)'} | ElevenLabs=${process.env.ELEVENLABS_API_KEY ? 'chave configurada' : 'sem chave'}`);
   console.log('Ambiente básico aprovado. Ausências opcionais não bloqueiam CREATE/EDIT/3D integrado. O navegador será verificado no primeiro render.');
 };
 
@@ -567,7 +717,7 @@ const sceneLibraryCommand = (templateId, options = {}) => {
   return scene;
 };
 
-const help = () => console.log(`Motion Studio Pro 2.0.0
+const help = () => console.log(`Motion Studio Pro 2.1.0
 
 Uso:
   motion-studio.mjs doctor
@@ -579,7 +729,12 @@ Uso:
   motion-studio.mjs verify <projeto.json> <final.mp4>
   motion-studio.mjs quality <projeto.json> <final.mp4> [--out qualidade.json]
   motion-studio.mjs srt <projeto.json> --out legendas.srt
-  motion-studio.mjs tts <projeto.json> --out projeto-com-voz.json [--sync --voice "Microsoft Maria"]
+  motion-studio.mjs tts <projeto.json> --out projeto-com-voz.json [--provider onecore|kokoro|elevenlabs --preset educational --voice ID]
+  motion-studio.mjs tts-preview --text "..." [--provider onecore|kokoro|elevenlabs --voice ID --out amostra.wav]
+  motion-studio.mjs tts-compare --text "..." --candidates "onecore:Microsoft Maria,kokoro:pf_dora,elevenlabs:VOICE_ID"
+  motion-studio.mjs tts-voices [--provider onecore|kokoro|elevenlabs]
+  motion-studio.mjs audio-inspect <audio-ou-video> [--out relatorio.json --preserve-pcm]
+  motion-studio.mjs audio-compare <projeto.json> <video.mp4> [--out relatorio.json]
   motion-studio.mjs pipeline <projeto.json> --out final.mp4 [--skip-preview]
   motion-studio.mjs analyze <video> --out analise.json [--noise -35 --silence 0.8]
   motion-studio.mjs edit-plan <video> --out projeto.json [--intensity conservative|dynamic|editorial --aspect 9:16]
@@ -629,6 +784,21 @@ const main = async () => {
       break;
     case 'tts':
       await ttsCommand(positional[0], options.out, options);
+      break;
+    case 'tts-preview':
+      await ttsPreviewCommand(options);
+      break;
+    case 'tts-compare':
+      await ttsCompareCommand(options);
+      break;
+    case 'tts-voices':
+      await ttsVoicesCommand(options);
+      break;
+    case 'audio-inspect':
+      await audioInspectCommand(positional[0], options);
+      break;
+    case 'audio-compare':
+      await audioCompareCommand(positional[0], positional[1], options);
       break;
     case 'pipeline':
       await pipelineCommand(positional[0], options.out, options);

@@ -86,7 +86,7 @@ export const SceneRenderer: React.FC<Props> = ({scene, project, tokens, duration
       {scene.elements.map((element) => (
         <ElementRenderer key={element.id} element={element} tokens={tokens} sceneDurationFrames={durationInFrames} />
       ))}
-      {scene.audio ? <Audio src={resolveMedia(scene.audio.src)} volume={scene.audio.volume ?? 1} loop={scene.audio.loop ?? false} /> : null}
+      {scene.audio ? <Audio src={resolveMedia(scene.audio.src)} volume={scene.audio.volume ?? 1} loop={scene.audio.loop ?? false} playbackRate={scene.audio.playbackRate ?? 1} /> : null}
       <DynamicCaptions scene={scene} project={project} tokens={tokens} />
     </AbsoluteFill>
   );

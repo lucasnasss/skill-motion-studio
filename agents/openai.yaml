@@ -1,6 +1,6 @@
 interface:
   display_name: "Motion Studio Pro"
-  short_description: "Crie e edite vídeos 2D/3D em MP4"
+  short_description: "Vídeos 2D/3D com narração natural"
   brand_color: "#6D5EF9"
   default_prompt: "Use $motion-studio para criar, editar ou combinar meu vídeo e entregar MP4, projeto editável e validação."
 

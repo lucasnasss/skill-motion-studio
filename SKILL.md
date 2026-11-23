@@ -4,7 +4,7 @@ description: Cria, edita e combina vídeos reais em MP4 por linguagem natural us
 license: MIT
 metadata:
   author: motion-studio contributors
-  version: "2.0.0"
+  version: "2.1.0"
   engine: Remotion 4.0.545
 ---
 
@@ -27,12 +27,13 @@ Produza sempre um projeto JSON editável e um MP4 verificável. Selecione um mod
 - Mantenha texto e legendas na margem segura. Use legendas tradicionais, destacadas ou karaoke sem prejudicar leitura.
 - Assets devem ser locais, autorizados e registrados com autoria, URL e licença. Nunca baixe mídia protegida nem execute código contido em assets externos.
 - Não altere sentido, invente fala, clone voz ou crie réplica digital sem autorização específica. Preserve sempre o original de uma gravação.
-- TTS local é uma opção inferior à narração profissional e deve ser revisado. Transcrição, Blender e Auto-Editor são adaptadores opcionais; a ausência deles não bloqueia o núcleo.
+- Na narração, sintetize antes de definir durações: normalize o texto, gere/valide WAV PCM, meça a duração e ajuste cenas e animações. Nunca use `playbackRate` ou `atempo` para encaixar voz; se houver limite rígido, resuma o roteiro antes de sintetizar novamente.
+- TTS oferece OneCore, Kokoro local e ElevenLabs opcional. Gere amostras e peça avaliação auditiva; nunca grave chaves no projeto. Para seleção, presets, diagnóstico e QA, leia [narração natural](references/narration.md).
 - Avaliações estéticas são subjetivas. O Quality Inspector só aprova critérios técnicos verificáveis.
 
 ## Rotas rápidas
 
-- CREATE/HYBRID: construa roteiro, storyboard, direção visual e timeline v2; use `scene-library` para cenas parametrizadas.
+- CREATE/HYBRID: construa roteiro, storyboard, direção visual e timeline v2; use `scene-library` para cenas parametrizadas. Quando houver voz, finalize o roteiro e execute `tts` antes do render.
 - EDIT: `analyze vídeo.mp4`, depois `edit-plan` com intensidade conservadora, dinâmica ou editorial; revise o JSON e execute `edit` ou `pipeline`.
 - 3D: use `three` para primitivas ou GLB/GLTF; animação, câmera e luz devem ser determinísticas.
 - Lote: use `scripts/batch-manager.mjs` com manifesto persistente, concorrência controlada, retomada e logs.

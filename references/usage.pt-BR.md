@@ -26,12 +26,12 @@ Intensidades: `conservative` preserva o ritmo natural; `dynamic` reduz pausas e 
 ## Áudio e legendas
 
 ```powershell
-node scripts/motion-studio.mjs tts projeto.json --out projeto-com-voz.json --sync
+node scripts/motion-studio.mjs tts projeto.json --out projeto-com-voz.json --provider onecore --preset educational
 node scripts/motion-studio.mjs srt projeto-com-voz.json --out output/legendas.srt
 python scripts/transcribe.py entrada.mp4 --out output/transcricao.json --language pt
 ```
 
-O TTS incluído usa vozes OneCore no Windows. `faster-whisper` é opcional e deve ser instalado em ambiente Python isolado para usar `transcribe.py`. Cues aceitam timestamps de palavras e estilos `traditional`, `highlight` e `karaoke`.
+O TTS suporta OneCore, Kokoro e ElevenLabs. A voz permanece em `playbackRate 1.0`; cenas e animações seguem a duração real do WAV. Consulte [narração natural](narration.md) para prévias, comparação de vozes, presets, chaves e QA. `faster-whisper` é opcional para transcrição.
 
 ## 3D e cenas reutilizáveis
 
@@ -57,4 +57,4 @@ O lote persiste progresso e logs, aceita retomada/tentativas e limita concorrên
 
 ## Comandos completos
 
-`doctor`, `new`, `validate`, `preview`, `frames`, `render`, `verify`, `quality`, `srt`, `tts`, `pipeline`, `analyze`, `edit-plan`, `edit` e `scene-library`. Execute `node scripts/motion-studio.mjs help` para opções.
+`doctor`, `new`, `validate`, `preview`, `frames`, `render`, `verify`, `quality`, `srt`, `tts`, `tts-preview`, `tts-compare`, `tts-voices`, `audio-inspect`, `audio-compare`, `pipeline`, `analyze`, `edit-plan`, `edit` e `scene-library`. Execute `node scripts/motion-studio.mjs help` para opções.

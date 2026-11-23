@@ -1,0 +1,15 @@
+{
+  "version": "1.0",
+  "presets": {
+    "educational": {"label": "Educacional", "speed": 0.98, "stability": 0.68, "similarityBoost": 0.78, "style": 0.12},
+    "documentary": {"label": "Documentário", "speed": 0.94, "stability": 0.55, "similarityBoost": 0.76, "style": 0.32},
+    "social": {"label": "Redes sociais", "speed": 1.03, "stability": 0.58, "similarityBoost": 0.76, "style": 0.22},
+    "institutional": {"label": "Institucional", "speed": 1.0, "stability": 0.72, "similarityBoost": 0.8, "style": 0.08}
+  },
+  "defaults": {"provider": "onecore", "preset": "educational", "speed": 1.0},
+  "providers": {
+    "onecore": {"local": true, "defaultVoice": "Microsoft Maria"},
+    "kokoro": {"local": true, "defaultVoice": "pf_dora", "language": "p"},
+    "elevenlabs": {"local": false, "defaultModel": "eleven_multilingual_v2", "environmentKey": "ELEVENLABS_API_KEY"}
+  }
+}

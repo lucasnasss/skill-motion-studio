@@ -1,0 +1,11 @@
+{
+  "version":"2.0","mode":"create","style":"print","title":"Teste de narração educacional",
+  "objective":"Avaliar clareza em termos científicos","audience":"Estudantes","language":"pt-BR","theme":"scientific",
+  "video":{"width":1280,"height":720,"fps":30,"safeMarginPct":0.08},
+  "captions":{"enabled":true,"burnIn":true,"position":"bottom","style":"traditional","fontSize":34},
+  "timeline":{"durationSeconds":6,"tracks":[{"id":"visual","type":"overlay","clips":[{"id":"educational-visual","startSeconds":0,"durationSeconds":6,"sceneId":"educational"}]}]},
+  "scenes":[{"id":"educational","durationSeconds":6,"narration":"Na fotossíntese, a clorofila absorve energia luminosa. Essa energia ajuda a transformar água e dióxido de carbono em glicose e oxigênio. O processo também responde à temperatura e ao pH do ambiente.","elements":[
+    {"id":"title","type":"text","x":0.09,"y":0.16,"width":0.82,"height":0.2,"text":"FOTOSSÍNTESE","role":"title","align":"center","enter":{"preset":"slide-up","durationSeconds":0.7}},
+    {"id":"process","type":"process","x":0.12,"y":0.42,"width":0.76,"height":0.26,"steps":[{"label":"Luz"},{"label":"Clorofila"},{"label":"Glicose + O₂"}],"enter":{"preset":"fade","durationSeconds":0.8}}
+  ]}]
+}

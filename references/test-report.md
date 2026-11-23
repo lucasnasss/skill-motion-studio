@@ -29,3 +29,9 @@ Arquivos de teste ficam em `examples/pro2-*.json`; o projeto C é gerado localme
 - Blender, faster-whisper e Auto-Editor não estão instalados; seus adaptadores são opcionais e não foram chamados de validados.
 - Não havia gravação autorizada de uma pessoa falando para a câmera. Para concluir o Teste C literalmente, forneça uma gravação própria/autorizada e revise os cortes semanticamente.
 - Qualidade estética e narrativa continua sendo decisão humana/subjetiva.
+
+## Upgrade 2.1 — narração natural
+
+O baseline antigo foi reprovado: OneCore operava em 1,08×, dois WAVs ultrapassavam cenas de 6 s e eram truncados, e o MP4 continha silêncios artificiais de até 1,7 s entre segmentos. O pipeline 2.1 usa velocidade moderada, WAV PCM mono 48 kHz, `loudnorm`, QA sem filtros opcionais e timeline derivada da duração medida.
+
+Três testes pt-BR foram sintetizados com OneCore, renderizados e comparados: educacional científico, redes sociais e documental. Todos preservaram `playbackRate 1.0`, não apresentaram clipping nem risco de truncamento. Kokoro não foi executado porque o Python local é 3.14 e não há espeak-ng; ElevenLabs não foi executado porque nenhuma chave foi fornecida. A naturalidade deve ser julgada auditivamente pelo usuário nos WAVs e MP4s preservados em `output/narration-tests/`.

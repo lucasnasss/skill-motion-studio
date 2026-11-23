@@ -3,6 +3,8 @@ output/
 .render-temp/
 public/imports/
 examples/pro2-c-edit-proxy.json
+public/audio/natural-*
 dist/
 .DS_Store
 *.log
+.motion-studio/
