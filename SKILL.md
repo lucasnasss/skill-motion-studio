@@ -1,6 +1,6 @@
 ---
 name: motion-studio
-description: Cria, edita e combina vídeos reais em MP4 por linguagem natural usando Remotion, React, FFmpeg e 3D determinístico. Use para Reels/Shorts, talking head, cortes de pausas, legendas dinâmicas, vídeos educativos, motion graphics, gráficos, animações 2D/3D, versões em lote e vídeos para apresentações.
+description: Cria e edita vídeos, Reels, aulas, gravações e animações para apresentações. Anima avatares 2D com áudio, transforma imagens recortadas em baixo-relevo 3D GLB e aplica efeitos editoriais. Use para vídeos por descrição, cortes, legendas, narração, projetos educacionais e modelos para PowerPoint.
 license: MIT
 metadata:
   author: motion-studio contributors
@@ -32,6 +32,8 @@ Produza sempre um projeto JSON editável e um MP4 verificável. Selecione um mod
 - Avaliações estéticas são subjetivas. O Quality Inspector só aprova critérios técnicos verificáveis.
 
 ## Rotas rápidas
+
+Para animar um avatar, transformar uma imagem em 3D, aplicar efeitos a uma gravação ou receber um pedido de aula do Edu Studio, consulte [produção por referência](references/v4-manual.md).
 
 - CREATE/HYBRID: construa roteiro, storyboard, direção visual e timeline v2; use `scene-library` para cenas parametrizadas. Quando houver voz, finalize o roteiro e execute `tts` antes do render.
 - EDIT: `analyze vídeo.mp4`, depois `edit-plan` com intensidade conservadora, dinâmica ou editorial; revise o JSON e execute `edit` ou `pipeline`.

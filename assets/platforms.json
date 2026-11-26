@@ -1,0 +1,12 @@
+{
+  "version":"1.0",
+  "presets":{
+    "instagram-reels":{"width":1080,"height":1920,"fps":30,"safeMarginPct":0.14},
+    "tiktok":{"width":1080,"height":1920,"fps":30,"safeMarginPct":0.14},
+    "youtube-shorts":{"width":1080,"height":1920,"fps":30,"safeMarginPct":0.14},
+    "youtube-horizontal":{"width":1920,"height":1080,"fps":30,"safeMarginPct":0.07},
+    "institucional":{"width":1920,"height":1080,"fps":30,"safeMarginPct":0.08},
+    "explicativo":{"width":1920,"height":1080,"fps":30,"safeMarginPct":0.08},
+    "quadrado":{"width":1080,"height":1080,"fps":30,"safeMarginPct":0.09}
+  }
+}

@@ -13,7 +13,7 @@ const resolveAsset = (src: string) =>
     ? src
     : staticFile(src.replaceAll('\\', '/').replace(/^\//, ''));
 
-const Model: React.FC<{src: string; color: string}> = ({src, color}) => {
+const Model: React.FC<{src: string; color?: string}> = ({src, color}) => {
   const gltf = useLoader(GLTFLoader, resolveAsset(src)) as {scene: THREE.Group};
   const model = useMemo(() => {
     const clone = gltf.scene.clone(true);
@@ -24,7 +24,7 @@ const Model: React.FC<{src: string; color: string}> = ({src, color}) => {
       const materials = Array.isArray(child.material) ? child.material : [child.material];
       const cloned = materials.map((material) => {
         const next = material.clone();
-        if ('color' in next && next.color instanceof THREE.Color) next.color.set(color);
+        if (color && 'color' in next && next.color instanceof THREE.Color) next.color.set(color);
         return next;
       });
       child.material = Array.isArray(child.material) ? cloned : cloned[0];
@@ -71,7 +71,7 @@ const AnimatedObject: React.FC<Props> = ({element, tokens}) => {
   return (
     <group scale={baseScale} rotation={[seconds * speed[0], seconds * speed[1], seconds * speed[2]]}>
       {element.modelSrc ? (
-        <Model src={element.modelSrc} color={color} />
+        <Model src={element.modelSrc} color={element.color} />
       ) : (
         <mesh castShadow receiveShadow>
           <Geometry element={element} />
